@@ -28,19 +28,18 @@ class klient(discord.Client):
         if message.content.startswith('$komendy'):
             await message.channel.send('Wysłałem ci listę komend na PM')
             await message.author.send(lista_komend)
-        for allowed_channel in message.guild.channels:
-            if str(allowed_channel) == "muzyczna-złota-rybka" or str(allowed_channel) == "zabawy-z-automatem" or str(allowed_channel) == "przełożeni-polibota":
-                if message.content.startswith('$radio play'):
-                    like = '\N{THUMBS UP SIGN}'
-                    dislike = '\N{THUMBS DOWN SIGN}'
-                    await message.add_reaction(like)
-                    await message.add_reaction(dislike)
+        if message.content.startswith('$radio') and message.channel == "muzyczna-złota-rybka" or message.channel == "zabawy-z-automatem" or message.channel == "przełożeni-polibota":
+            if message.content.startswith('$radio dodaj'):
+                like = '\N{THUMBS UP SIGN}'
+                dislike = '\N{THUMBS DOWN SIGN}'
+                await message.add_reaction(like)
+                await message.add_reaction(dislike)
         if message.content.startswith('$happyturzyn'):
             await message.channel.send("Happy turzyn:")
             await channel.send(file=discord.File('.\\images\\happyturzyn.png'))
         if message.content.startswith('$happyzuber'):
             await message.channel.send("Happy Zuber:")
-            await channel.send(file=discord.File('.\\images\\zuber_approves.jpeg'), )
+            await message.channel.send(file=discord.File('.\\images\\zuber_approves.jpeg'), )
 #if message.content.startswith('$radio'):
             #await message.channel.send('a')
 klient = klient()
