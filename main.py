@@ -9,10 +9,10 @@ import asyncio
 
 token = credentials.getToken()
 
-info_message = "```To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot```"
-command_list = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n ```"
+wiadomosc_info = "```To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot```"
+lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n ```"
 
-class MyClient(discord.Client):
+class klient(discord.Client):
     async def commands(self, author):
         pass
     async def on_ready(self):
@@ -24,18 +24,17 @@ class MyClient(discord.Client):
         if message.content.startswith('$hello'):
             await message.channel.send('Hello World!')
         if message.content.startswith('$info'):
-            await message.channel.send(info_message)
+            await message.channel.send(wiadomosc_info)
         if message.content.startswith('$komendy'):
             await message.channel.send('Wysłałem ci listę komend na PM')
-            await message.author.send(command_list)
+            await message.author.send(lista_komend)
         for allowed_channel in message.guild.channels:
-            if str(allowed_channel) == "muzyczna-zlota-rybka" or str(allowed_channel) == "zabawy-z-automatem" or str(allowed_channel) == "przelozeni-polibota":
+            if str(allowed_channel) == "muzyczna-złota-rybka" or str(allowed_channel) == "zabawy-z-automatem" or str(allowed_channel) == "przełożeni-polibota":
                 if message.content.startswith('$radio play'):
-                    print("Stop")
-                    thumbsup = '\N{THUMBS UP SIGN}'
-                    thumbsdown = '\N{THUMBS DOWN SIGN}'
-                    await message.add_reaction(thumbsup)
-                    await message.add_reaction(thumbsdown)
+                    like = '\N{THUMBS UP SIGN}'
+                    dislike = '\N{THUMBS DOWN SIGN}'
+                    await message.add_reaction(like)
+                    await message.add_reaction(dislike)
         if message.content.startswith('$happyturzyn'):
             await message.channel.send("Happy turzyn:")
             await channel.send(file=discord.File('.\\images\\happyturzyn.png'))
@@ -44,5 +43,5 @@ class MyClient(discord.Client):
             await channel.send(file=discord.File('.\\images\\zuber_approves.jpeg'), )
 #if message.content.startswith('$radio'):
             #await message.channel.send('a')
-client = MyClient()
-client.run(token)
+klient = klient()
+klient.run(token)
