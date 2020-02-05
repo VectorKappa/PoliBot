@@ -40,7 +40,5 @@ class klient(discord.Client):
         if message.content.startswith('$happyzuber'):
             await message.channel.send("Happy Zuber:")
             await message.channel.send(file=discord.File('.\\images\\zuber_approves.jpeg'), )
-#if message.content.startswith('$radio'):
-            #await message.channel.send('a')
 klient = klient()
 klient.run(token)
