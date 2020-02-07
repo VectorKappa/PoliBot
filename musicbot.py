@@ -115,6 +115,16 @@ class Music(commands.Cog):
         await ctx.send("Changed volume to {}%".format(volume))
     
     @commands.command()
+    async def happyturzyn(self, ctx):
+        return await ctx.send("Happy turzyn:")
+        return await ctx.send(file=discord.File('.\\images\\happyturzyn.png'))
+
+    @commands.command()
+    async def happyzuber(self, ctx):
+        return await ctx.send("Happy Zuber:")
+        return await ctx.send(file=discord.File('.\\images\\zuber_approves.jpeg'))
+
+    @commands.command()
     async def info(self, ctx):
         await ctx.send(wiadomosc_info)
     
@@ -156,25 +166,18 @@ async def on_ready():
 #doesn't yet work
 
 @bot.event
-async def on_message(self, ctx):
+async def on_message(self, message):
     print('Message from {0.author}: \"{0.content}\" on {0.channel}'.format(message))
     if message.author == self.user:
         return
 
         
-#            if message.content.startswith('$radio dodaj'):
-#                if message.content.startswith('$radio') and message.channel == "muzyczna-złota-rybka" or message.channel == "zabawy-z-automatem" or message.channel == "przełożeni-polibota":
-#                like = '\N{THUMBS UP SIGN}'
-#                dislike = '\N{THUMBS DOWN SIGN}'
-#                await message.add_reaction(like)
-#                await message.add_reaction(dislike)
-#        if message.content.startswith('$happyturzyn'):
-#            await message.channel.send("Happy turzyn:")
-#            await channel.send(file=discord.File('.\\images\\happyturzyn.png'))
- #       if message.content.startswith('$happyzuber'):
-#            await message.channel.send("Happy Zuber:")
- #           await message.channel.send(file=discord.File('.\\images\\zuber_approves.jpeg'), )
-
+            if message.content.startswith('$radio dodaj'):
+               if message.content.startswith('$radio') and message.channel == "muzyczna-złota-rybka" or message.channel == "zabawy-z-automatem" or message.channel == "przełożeni-polibota":
+                like = '\N{THUMBS UP SIGN}'
+                dislike = '\N{THUMBS DOWN SIGN}'
+                await message.add_reaction(like)
+                await message.add_reaction(dislike)
 
 bot.add_cog(Music(bot))
 bot.run(token)
