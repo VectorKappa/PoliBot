@@ -131,7 +131,7 @@ class Music(commands.Cog):
     @commands.command()
     async def komendy(self, ctx):
         await ctx.send('Wysłałem ci listę komend na PM')
-        await message.author.send(lista_komend)
+        await ctx.author.send(lista_komend)
 
     @commands.command()
     async def stop(self, ctx):
@@ -163,21 +163,20 @@ async def on_ready():
     print('Logged in as {0} ({0.id})'.format(bot.user))
     print('---------------------------------')
 
-#doesn't yet work
+#doesn't fucking work
 
-@bot.event
-async def on_message(self, message):
-    print('Message from {0.author}: \"{0.content}\" on {0.channel}'.format(message))
-    if message.author == self.user:
-        return
+#@bot.event
+#async def on_message(message):
+#    print('Message from {0.author}: \"{0.content}\" on {0.channel}'.format(message))
+#    return
 
-        
-            if message.content.startswith('$radio dodaj'):
-               if message.content.startswith('$radio') and message.channel == "muzyczna-złota-rybka" or message.channel == "zabawy-z-automatem" or message.channel == "przełożeni-polibota":
-                like = '\N{THUMBS UP SIGN}'
-                dislike = '\N{THUMBS DOWN SIGN}'
-                await message.add_reaction(like)
-                await message.add_reaction(dislike)
+
+#if message.content.startswith('$radio dodaj'):
+#if message.content.startswith('$radio') and message.channel == "muzyczna-złota-rybka" or message.channel == "zabawy-z-automatem" or message.channel == "przełożeni-polibota":
+#like = '\N{THUMBS UP SIGN}'
+#dislike = '\N{THUMBS DOWN SIGN}'
+#await message.add_reaction(like)
+#await message.add_reaction(dislike)
 
 bot.add_cog(Music(bot))
 bot.run(token)
