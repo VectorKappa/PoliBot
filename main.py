@@ -2,6 +2,8 @@ import asyncio
 import discord
 import youtube_dl
 import credentials
+import datetime
+import time
 from discord.ext import commands
 
 # Wyciszenie błędów youtube_dl
@@ -17,7 +19,7 @@ wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehre
 
 # Komunikaty
 wiadomosc_info = "To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot"
-lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n ```"
+lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zglos - zgłoś kogoś moderatorom za łamanie zasad \n $zasady - wyświetla zasady serwera \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź kogoś adres ip \n $t/n - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś Koronawirusem \n $zapytajboga / $zapytajallaha - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
 wybor_klasy = "Witamy na szkolnym serwerze ZSPM! Podaj nam klasę, do której uczęszczasz: \n1ATPDPI\n1ATGPC\n1BTGPC\n1CTI\n1DTI\n1DTM\n1ETGPC\n1FTI\n1FTM\n1GTI\n2ATPD\n2ATGPC\n2CTI\n2DTI\n2DTM\n3ATPD\n3ATGPC\n3BTGPC\n3CTI\n3DTI\n3DTM\n4ATPD\n4ATM\n4BTCPG\n4CTI\n4DTI"
 ostrzezenie_autoryzacji = "Próbowałeś, ale nie. Incydent zgłoszono. \n Chyba że naprawdę jesteś nauczycielem. Wtedy napisz do kogoś z administracji."
 blad_klasy = "Podaj klasę z listy!"
@@ -266,28 +268,34 @@ class Policjant(commands.Cog):
     async def aresztuj(self, ctx, member):
         await ctx.send(f"Aresztowano {ctx.member}")
 
-# class Zabawa(commands.Cog):
-#     def __init__(self, bot):
-#         self.bot = bot
+class Zabawa(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
 
-#     # $firstwords - First message the bot has saved from player
-#     # !ping - Get ping of yourself or someone else.
-#     # !time - Time in ticks
-#     # !sleep - Tells you if you can sleep or not
-#     # !report - Report someone to server moderators for breaking the rules.
-#     # !rules - Rules of the server
-#     # !no - NO
-#     # !yes - YES
-#     # !ip - find location and isp of an ip or domain.
-#     # !dox - find someones ip
-#     # !nwordcount - !nwordcount PLAYER - check how many nwords the player has said. Added for black history month.
-#     # !y/n - Yes or no
-#     # !dice - Roll a die
-#     # !infect - infect someone with autisms.
-#     # !askgod / !askallah / !askrusher - ask
-#     # !kill - kill someone
-#     # !op - Op yourself or someone else
-#     # !bless - bless someone. You are a good person.
+    @commands.command()
+    async def czas(self, ctx):
+        await ctx.send(f"Aktualny czas to: {time.mktime(datetime.datetime.now().timetuple())}")
+
+    @commands.command()
+    async def zainfekuj(self, ctx, member):
+        await ctx.send(f"{ctx.author} zainfekował {ctx.member} Koronawirusem")
+
+    # $firstwords - First message the bot has saved from player
+    # $ping - Get ping of yourself or someone else.
+    # $sleep - Tells you if you can sleep or not
+    # $report - Report someone to server moderators for breaking the rules.
+    # $rules - Rules of the server
+    # $no - NO
+    # $yes - YES
+    # $ip - find location and isp of an ip or domain.
+    # $dox - find someones ip
+    # $nwordcount - !nwordcount PLAYER - check how many nwords the player has said. Added for black history month.
+    # $y/n - Yes or no
+    # $dice - Roll a die
+    # $askgod / !askallah / !askrusher - ask
+    # $kill - kill someone
+    # $op - Op yourself or someone else
+    # $bless - bless someone. You are a good person.
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
                    description=wiadomosc_info, help_command=None)
@@ -304,6 +312,6 @@ bot.add_cog(Muzyka(bot))
 bot.add_cog(Przydzielaczka(bot))
 bot.add_cog(Logger(bot))
 # bot.add_cog(Policjant(bot))
-# bot.add_cog(Zabawa(bot))
+bot.add_cog(Zabawa(bot))
 
 bot.run(token)
