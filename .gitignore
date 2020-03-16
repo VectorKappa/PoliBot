@@ -1,13 +1,10 @@
-# Logs
+# Logi
 logs
 *.log
 
-# dotenv environment variables file
-.env
-.env.test
-
-.cache/
-
+# Prywatne dane
 credentials.py
+
+# Reszta
 .vscode/
 __pycache__/
