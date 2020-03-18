@@ -6,6 +6,7 @@ import re
 from discord.ext import tasks, commands
 import datetime
 import time
+import random
 
 # Wyciszenie błędów youtube_dl
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -21,11 +22,136 @@ wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehre
 
 # Komunikaty
 wiadomosc_info = "To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot"
-lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zglos - zgłoś kogoś moderatorom za łamanie zasad \n $zasady - wyświetla zasady serwera \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź kogoś adres ip \n $t/n - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś Koronawirusem \n $zapytajboga / $zapytajallaha - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
+lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zglos - zgłoś kogoś moderatorom za łamanie zasad \n $zasady - wyświetla zasady serwera \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź kogoś adres ip \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś Koronawirusem \n $zapytajboga / $zapytajallaha - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
 wybor_klasy = "Witamy na szkolnym serwerze ZSPM! Podaj nam klasę, do której uczęszczasz: \n1ATPDPI\n1ATGPC\n1BTGPC\n1CTI\n1DTI\n1DTM\n1ETGPC\n1FTI\n1FTM\n1GTI\n2ATPD\n2ATGPC\n2CTI\n2DTI\n2DTM\n3ATPD\n3ATGPC\n3BTGPC\n3CTI\n3DTI\n3DTM\n4ATPD\n4ATM\n4BTCPG\n4CTI\n4DTI"
 ostrzezenie_autoryzacji = "Próbowałeś, ale nie. Incydent zgłoszono. \n Chyba że naprawdę jesteś nauczycielem. Wtedy napisz do kogoś z administracji."
 blad_klasy = "Podaj klasę z listy!"
+tak = ("""```
+        ,----,                     
+      ,/   .`|                     
+    ,`   .'  :                ,-.  
+  ;    ;     /            ,--/ /|  
+.'___,/    ,'           ,--. :/ |  
+|    :     |            :  : ' /   
+;    |.';  ;  ,--.--.   |  '  /    
+`----'  |  | /       \  '  |  :    
+    '   :  ;.--.  .-. | |  |   \   
+    |   |  ' \__\/: . . '  : |. \  
+    '   :  | ," .--.; | |  | ' \ \ 
+    ;   |.' /  /  ,.  | '  : |--'  
+    '---'  ;  :   .'   \;  |,'     
+           |  ,     .-./'--'       
+            `--`---'                                       
+        ```""", """```
+ /$$$$$$$$        /$$      
+|__  $$__/       | $$      
+   | $$  /$$$$$$ | $$   /$$
+   | $$ |____  $$| $$  /$$/
+   | $$  /$$$$$$$| $$$$$$/ 
+   | $$ /$$__  $$| $$_  $$ 
+   | $$|  $$$$$$$| $$ \  $$
+   |__/ \_______/|__/  \__/              
+        ```""", """```
+  _______    _    
+ |__   __|  | |   
+    | | __ _| | __
+    | |/ _` | |/ /
+    | | (_| |   < 
+    |_|\__,_|_|\_\\
+        ```""", """```
+.------..------..------.
+|T.--. ||A.--. ||K.--. |
+| :/\: || (\/) || :/\: |
+| (__) || :\/: || :\/: |
+| '--'T|| '--'A|| '--'K|
+`------'`------'`------'
+        ```""", """```
+ooooooooooooo           oooo        
+8'   888   `8           `888        
+     888       .oooo.    888  oooo  
+     888      `P  )88b   888 .8P'   
+     888       .oP"888   888888.    
+     888      d8(  888   888 `88b.  
+    o888o     `Y888""8o o888o o888o                 
+        ```""", """```
+▄▄▄█████▓ ▄▄▄       ██ ▄█▀
+▓  ██▒ ▓▒▒████▄     ██▄█▒ 
+▒ ▓██░ ▒░▒██  ▀█▄  ▓███▄░ 
+░ ▓██▓ ░ ░██▄▄▄▄██ ▓██ █▄ 
+  ▒██▒ ░  ▓█   ▓██▒▒██▒ █▄
+  ▒ ░░    ▒▒   ▓▒█░▒ ▒▒ ▓▒
+    ░      ▒   ▒▒ ░░ ░▒ ▒░
+  ░        ░   ▒   ░ ░░ ░ 
+               ░  ░░  ░   
+        ```""", """```
+ ____ ____ ____ 
+||T |||a |||k ||
+||__|||__|||__||
+|/__\|/__\|/__\|
+        ```""",)
+nie = ("""```
+         ,--.                   
+       ,--.'|   ,---,    ,---,. 
+   ,--,:  : |,`--.' |  ,'  .' | 
+,`--.'`|  ' :|   :  :,---.'   | 
+|   :  :  | |:   |  '|   |   .' 
+:   |   \ | :|   :  |:   :  |-, 
+|   : '  '; |'   '  ;:   |  ;/| 
+'   ' ;.    ;|   |  ||   :   .' 
+|   | | \   |'   :  ;|   |  |-, 
+'   : |  ; .'|   |  ''   :  ;/| 
+|   | '`--'  '   :  ||   |    \ 
+'   : |      ;   |.' |   :   .' 
+;   |.'      '---'   |   | ,'   
+'---'                `----'                                            
+        ```""", """```
+ /$$   /$$ /$$          
+| $$$ | $$|__/          
+| $$$$| $$ /$$  /$$$$$$ 
+| $$ $$ $$| $$ /$$__  $$
+| $$  $$$$| $$| $$$$$$$$
+| $$\  $$$| $$| $$_____/
+| $$ \  $$| $$|  $$$$$$$
+|__/  \__/|__/ \_______/         
+        ```""", """```
+  _   _ _      
+ | \ | (_) ___ 
+ |  \| | |/ _ \\
+ | |\  | |  __/
+ |_| \_|_|\___|
+        ```""", """```
+.------..------..------.
+|N.--. ||I.--. ||E.--. |
+| :(): || (\/) || (\/) |
+| ()() || :\/: || :\/: |
+| '--'N|| '--'I|| '--'E|
+`------'`------'`------'
+        ```""", """```
+ooooo      ooo  o8o            
+`888b.     `8'  `"'            
+ 8 `88b.    8  oooo   .ooooo.  
+ 8   `88b.  8  `888  d88' `88b 
+ 8     `88b.8   888  888ooo888 
+ 8       `888   888  888    .o 
+o8o        `8  o888o `Y8bod8P'                                     
+        ```""", """```
+ ███▄    █  ██▓▓█████ 
+ ██ ▀█   █ ▓██▒▓█   ▀ 
+▓██  ▀█ ██▒▒██▒▒███   
+▓██▒  ▐▌██▒░██░▒▓█  ▄ 
+▒██░   ▓██░░██░░▒████▒
+░ ▒░   ▒ ▒ ░▓  ░░ ▒░ ░
+░ ░░   ░ ▒░ ▒ ░ ░ ░  ░
+   ░   ░ ░  ▒ ░   ░   
+         ░  ░     ░  ░
+        ```""", """```
+ ____ ____ ____ 
+||N |||i |||e ||
+||__|||__|||__||
+|/__\|/__\|/__\|
+        ```""",)
 
+tn = ["Tak.", "Nie."]
 # Opcje youtube_dl
 opcje_ytdl = {
     'format': 'bestaudio/best',
@@ -160,7 +286,7 @@ class Logger(commands.Cog):
         if ctx.author == bot.user:
             return
         else:
-            print(f"{ctx.author} napisał {ctx.content} na {ctx.channel}")
+            print(f"[{datetime.datetime.now()}]  {ctx.author} napisał {ctx.content} na {ctx.channel}")
 
 class Przydzielaczka(commands.Cog):
     def __init__(self, bot):
@@ -183,107 +309,107 @@ class Przydzielaczka(commands.Cog):
                 if str(ctx.content).lower() in wariacje_nauczycieli:
                     await ctx.author.send(ostrzezenie_autoryzacji)
                     print(f"{ctx.author} usiłował się zalogować jako nauczyciel")
-                elif ctx.content == "1ATPDPI":
+                elif ctx.content.upper() == "1ATPDPI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATPDPI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1ATPDPI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1ATPDPI dla {ctx.author}")
-                elif ctx.content == "1ATGPC":
+                elif ctx.content.upper() == "1ATGPC":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATGPC"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
-                elif ctx.content == "1BTGPC":
+                elif ctx.content.upper() == "1BTGPC":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1BTGPC"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
-                elif ctx.content == "1CTI":
+                elif ctx.content.upper() == "1CTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1CTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1CTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1CTI dla {ctx.author}")
-                elif ctx.content == "1DTI":
+                elif ctx.content.upper() == "1DTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1DTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1DTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1DTI dla {ctx.author}")
-                elif ctx.content == "1DTM":
+                elif ctx.content.upper() == "1DTM":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1DTM"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1DTM dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1DTM dla {ctx.author}")
-                elif ctx.content == "1ETGPC":
+                elif ctx.content.upper() == "1ETGPC":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ETGPC"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1ETGPC dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1ETGPC dla {ctx.author}")
-                elif ctx.content == "1FTI":
+                elif ctx.content.upper() == "1FTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1FTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1FTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1FTI dla {ctx.author}")
-                elif ctx.content == "1FTM":
+                elif ctx.content.upper() == "1FTM":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1FTM"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1FTM dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1FTM dla {ctx.author}")
-                elif ctx.content == "1GTI":
+                elif ctx.content.upper() == "1GTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1GTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 1GTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 1GTI dla {ctx.author}")
-                elif ctx.content == "2ATPD":
+                elif ctx.content.upper() == "2ATPD":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2ATPD"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 2ATPD dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 2ATPD dla {ctx.author}")
-                elif ctx.content == "2ATGPC":
+                elif ctx.content.upper() == "2ATGPC":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2ATGPC"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 2ATGPC dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 2ATGPC dla {ctx.author}")
-                elif ctx.content == "2CTI":
+                elif ctx.content.upper() == "2CTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2CTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 2CTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 2CTI dla {ctx.author}")
-                elif ctx.content == "2DTI":
+                elif ctx.content.upper() == "2DTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2DTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 2DTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 2DTI dla {ctx.author}")
-                elif ctx.content == "2DTM":
+                elif ctx.content.upper() == "2DTM":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2DTM"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 2DTM dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 2DTM dla {ctx.author}")
-                elif ctx.content == "3ATPD":
+                elif ctx.content.upper() == "3ATPD":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3ATPD"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 3ATPD dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 3ATPD dla {ctx.author}")
-                elif ctx.content == "3ATGPC":
+                elif ctx.content.upper() == "3ATGPC":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3ATGPC"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 3ATGPC dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 3ATGPC dla {ctx.author}")
-                elif ctx.content == "3BTGPC":
+                elif ctx.content.upper() == "3BTGPC":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3BTGPC"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 3BTGPC dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 3BTGPC dla {ctx.author}")
-                elif ctx.content == "3CTI":
+                elif ctx.content.upper() == "3CTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3CTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 3CTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 3CTI dla {ctx.author}")
-                elif ctx.content == "3DTI":
+                elif ctx.content.upper() == "3DTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3DTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 3DTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 3DTI dla {ctx.author}")
-                elif ctx.content == "3DTM":
+                elif ctx.content.upper() == "3DTM":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3DTM"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 3DTM dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 3DTM dla {ctx.author}")
-                elif ctx.content == "4ATPD":
+                elif ctx.content.upper() == "4ATPD":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4ATPD"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 4ATPD dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 4ATPD dla {ctx.author}")
-                elif ctx.content == "4ATM":
+                elif ctx.content.upper() == "4ATM":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4ATM"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 4ATM dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 4ATM dla {ctx.author}")
-                elif ctx.content == "4BTCPG":
+                elif ctx.content.upper() == "4BTCPG":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4BTCPG"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 4BTCPG dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 4BTCPG dla {ctx.author}")
-                elif ctx.content == "4CTI":
+                elif ctx.content.upper() == "4CTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4CTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 4CTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 4CTI dla {ctx.author}")
-                elif ctx.content == "4DTI":
+                elif ctx.content.upper() == "4DTI":
                     await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4DTI"]), serwer.get_role(689119435151114345),))
                     print(f"Przydzielono rolę 4DTI dla {ctx.author}")
                     await ctx.author.send(f"Przydzielono rolę 4DTI dla {ctx.author}")
@@ -325,78 +451,65 @@ class Zabawa(commands.Cog):
 
     @commands.command()
     async def czas(self, ctx):
-        await ctx.send(f"Aktualny czas to: {int(round(time.mktime(datetime.datetime.now().timetuple()), 1))}s")
+        await ctx.send(f"Aktualny czas to: {int(round(time.mktime(datetime.datetime.now().timetuple()), 1))}s (od 1/1/1970)")
 
     @commands.command()
-    async def zainfekuj(self, ctx, member):
-        await ctx.send(f"{ctx.author.name} zainfekował {member} Koronawirusem")
+    async def spanko(self, ctx):
+        now = datetime.datetime.now()
+        x = now.hour()
+        if (x >= 23 or x <= 6):
+            await ctx.send("Spać! A nie nocki jakieś :night:")
+        else:
+            await ctx.send("Trza było w nocy spać :day: ")
+
+    @commands.command()
+    async def zglos(self, ctx, uzytkownik):
+        await ctx.send(f"{ctx.author.mention} zgłosił {uzytkownik} administracji. Miej się na baczności!") 
+
+    @commands.command()
+    async def zasady(self, ctx):
+        await ctx.send('Wysłałem ci listę komend na PM')
+        await ctx.author.send(lista_komend)
+
+    @commands.command()
+    async def zainfekuj(self, ctx, uzytkownik):
+        await ctx.send(f"{ctx.author.mention} zainfekował {uzytkownik} koronawirusem")
 
     @commands.command()
     async def tak(self, ctx):
-        await ctx.send("""```
-        ,----,                     
-      ,/   .`|                     
-    ,`   .'  :                ,-.  
-  ;    ;     /            ,--/ /|  
-.'___,/    ,'           ,--. :/ |  
-|    :     |            :  : ' /   
-;    |.';  ;  ,--.--.   |  '  /    
-`----'  |  | /       \  '  |  :    
-    '   :  ;.--.  .-. | |  |   \   
-    |   |  ' \__\/: . . '  : |. \  
-    '   :  | ," .--.; | |  | ' \ \ 
-    ;   |.' /  /  ,.  | '  : |--'  
-    '---'  ;  :   .'   \;  |,'     
-           |  ,     .-./'--'       
-            `--`---'                                       
-        ```""")
+        await ctx.send(tak[random.randint(0, len(tak)-1)])
 
     @commands.command()
     async def nie(self, ctx):
-        await ctx.send("""```                            
-         ,--.                   
-       ,--.'|   ,---,    ,---,. 
-   ,--,:  : |,`--.' |  ,'  .' | 
-,`--.'`|  ' :|   :  :,---.'   | 
-|   :  :  | |:   |  '|   |   .' 
-:   |   \ | :|   :  |:   :  |-, 
-|   : '  '; |'   '  ;:   |  ;/| 
-'   ' ;.    ;|   |  ||   :   .' 
-|   | | \   |'   :  ;|   |  |-, 
-'   : |  ; .'|   |  ''   :  ;/| 
-|   | '`--'  '   :  ||   |    \ 
-'   : |      ;   |.' |   :   .' 
-;   |.'      '---'   |   | ,'   
-'---'                `----'                    
-        ```""")
+        await ctx.send(nie[random.randint(0, len(nie)-1)])
     
     @commands.command()
-    async def dox(self, ctx, member):
-        await ctx.send(f"")
-    # $firstwords - First message the bot has saved from player
-    # $ping - Get ping of yourself or someone else.
-    # $sleep - Tells you if you can sleep or not
-    # $report - Report someone to server moderators for breaking the rules.
-    # $rules - Rules of the server
-    # $ip - find location and isp of an ip or domain.
-    # $dox - find someones ip
-    # $nwordcount - !nwordcount PLAYER - check how many nwords the player has said. Added for black history month.
-    # $y/n - Yes or no
-    # $dice - Roll a die
-    # $askgod / !askallah / !askrusher - ask
-    # $kill - kill someone
-    # $op - Op yourself or someone else
-    # $bless - bless someone. You are a good person.
-
-    # English Translations (Cross-Compatibility) - Ważne, aby ułatwić korzystanie
-    # HELP CUZ I DUN KNOW HOW TO DO THIS
-    @commands.command()
-    async def time(self, ctx):
-        await ctx.send(f"Current time is: {int(round(time.mktime(datetime.datetime.now().timetuple()), 1))}s")
+    async def tn(self, ctx):
+        await ctx.send(tn[random.randint(0, 1)])
 
     @commands.command()
-    async def infect(self, ctx, member):
-        await ctx.send(f"{ctx.author.name} infected {member} with a dose of Autism")
+    async def dox(self, ctx, uzytkownik):
+        await ctx.send(f"Adres IP {uzytkownik} to {random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)} ez")
+
+    @commands.command()
+    async def kostka(self, ctx, ilosc_rzutow = 1, ilosc_scianek = 6):
+        for i in range(ilosc_rzutow):
+            wynik = []
+            return wynik.append(str(random.randint(1, ilosc_scianek))+" ")
+        await ctx.send(str(wynik))
+    
+    @commands.command()
+    async def op(self, ctx, uzytkownik):
+        await ctx.send(f"{uzytkownik} otrzymał uprawnienia Administratora.")
+
+    # TO DO
+    # $pierwsze-slowa - pierwsza wiadomość gracza na serwerze
+    # $ping - sprawdź ping bota
+    # $ip - sprawdź lokalizację i isp podanego adresu lub domeny
+    # $kostka - rzuć kostką
+    # $zapytajboga / $zapytajallaha - zapytaj
+    # $zabij - zabij kogoś
+    # $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
                    description=wiadomosc_info, help_command=None)
@@ -416,3 +529,24 @@ bot.add_cog(Logger(bot))
 bot.add_cog(Zabawa(bot))
 
 bot.run(token)
+
+# Spis wszystkich komend na serwerze.
+# $komendy - wysyła tę listę komend
+# $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio
+# $pierwsze-slowa - pierwsza wiadomość gracza na serwerze
+# $ping - sprawdź ping bota
+# $czas - wyświetla aktualny czas
+# $spanko - mówi ci czy możesz spać czy nie
+# $zglos - zgłoś kogoś moderatorom za łamanie zasad
+# $zasady - wyświetla zasady serwera
+# $nie - NIE
+# $tak - TAK
+# $ip - sprawdź lokalizację i isp podanego adresu lub domeny
+# $dox - znajdź kogoś adres ip
+# $tn - tak lub nie
+# $kostka - rzuć kostką
+# $zainfekuj - zainfekuj kogoś Koronawirusem
+# $zapytajboga / $zapytajallaha - zapytaj
+# $zabij - zabij kogoś
+# $op - daj komuś opa
+# $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.
