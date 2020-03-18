@@ -2,7 +2,8 @@ import asyncio
 import discord
 import youtube_dl
 import credentials
-from discord.ext import commands
+import re
+from discord.ext import tasks, commands
 
 # Wyciszenie błędów youtube_dl
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -11,6 +12,7 @@ youtube_dl.utils.bug_reports_message = lambda: ''
 token = credentials.getToken()
 id_serwera = credentials.getServerId()
 lista_roli = credentials.getRole()
+blocklista = credentials.getBlocklist()
 
 # Wariacje zmiennych
 wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehrer", "nauczycielka", "lehrerin", "profesor", "profesorka")
@@ -162,6 +164,10 @@ class Przydzielaczka(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.command()
+    async def rola(self, ctx):
+        await ctx.author.send(wybor_klasy)
+
     @commands.Cog.listener()
     async def on_member_join(self, ctx):
         await ctx.send(wybor_klasy)
@@ -170,124 +176,147 @@ class Przydzielaczka(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, ctx):
         if ctx.guild is None:
-            serwer = bot.get_guild(id_serwera)
-            if str(ctx.content).lower() in wariacje_nauczycieli:
-                await ctx.author.send(ostrzezenie_autoryzacji)
-                print(f"{ctx.author} usiłował się zalogować jako nauczyciel")
-            elif ctx.content == "1ATPDPI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATPDPI"]),))
-                print(f"Przydzielono rolę 1ATPDPI dla {ctx.author}")
-            elif ctx.content == "1ATGPC":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATGPC"]),))
-                print(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
-            elif ctx.content == "1BTGPC":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1BTGPC"]),))
-                print(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
-            elif ctx.content == "1CTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1CTI"]),))
-                print(f"Przydzielono rolę 1CTI dla {ctx.author}")
-            elif ctx.content == "1DTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1DTI"]),))
-                print(f"Przydzielono rolę 1DTI dla {ctx.author}")
-            elif ctx.content == "1DTM":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1DTM"]),))
-                print(f"Przydzielono rolę 1DTM dla {ctx.author}")
-            elif ctx.content == "1ETGPC":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ETGPC"]),))
-                print(f"Przydzielono rolę 1ETGPC dla {ctx.author}")
-            elif ctx.content == "1FTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1FTI"]),))
-                print(f"Przydzielono rolę 1FTI dla {ctx.author}")
-            elif ctx.content == "1FTM":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1FTM"]),))
-                print(f"Przydzielono rolę 1FTM dla {ctx.author}")
-            elif ctx.content == "1GTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1GTI"]),))
-                print(f"Przydzielono rolę 1GTI dla {ctx.author}")
-            elif ctx.content == "2ATPD":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2ATPD"]),))
-                print(f"Przydzielono rolę 2ATPD dla {ctx.author}")
-            elif ctx.content == "2ATGPC":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2ATGPC"]),))
-                print(f"Przydzielono rolę 2ATGPC dla {ctx.author}")
-            elif ctx.content == "2CTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2CTI"]),))
-                print(f"Przydzielono rolę 2CTI dla {ctx.author}")
-            elif ctx.content == "2DTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2DTI"]),))
-                print(f"Przydzielono rolę 2DTI dla {ctx.author}")
-            elif ctx.content == "2DTM":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2DTM"]),))
-                print(f"Przydzielono rolę 2DTM dla {ctx.author}")
-            elif ctx.content == "3ATPD":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3ATPD"]),))
-                print(f"Przydzielono rolę 3ATPD dla {ctx.author}")
-            elif ctx.content == "3ATGPC":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3ATGPC"]),))
-                print(f"Przydzielono rolę 3ATGPC dla {ctx.author}")
-            elif ctx.content == "3BTGPC":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3BTGPC"]),))
-                print(f"Przydzielono rolę 3BTGPC dla {ctx.author}")
-            elif ctx.content == "3CTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3CTI"]),))
-                print(f"Przydzielono rolę 3CTI dla {ctx.author}")
-            elif ctx.content == "3DTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3DTI"]),))
-                print(f"Przydzielono rolę 3DTI dla {ctx.author}")
-            elif ctx.content == "3DTM":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3DTM"]),))
-                print(f"Przydzielono rolę 3DTM dla {ctx.author}")
-            elif ctx.content == "4ATPD":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4ATPD"]),))
-                print(f"Przydzielono rolę 4ATPD dla {ctx.author}")
-            elif ctx.content == "4ATM":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4ATM"]),))
-                print(f"Przydzielono rolę 4ATM dla {ctx.author}")
-            elif ctx.content == "4BTCPG":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4BTCPG"]),))
-                print(f"Przydzielono rolę 4BTCPG dla {ctx.author}")
-            elif ctx.content == "4CTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4CTI"]),))
-                print(f"Przydzielono rolę 4CTI dla {ctx.author}")
-            elif ctx.content == "4DTI":
-                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4DTI"]),))
-                print(f"Przydzielono rolę 4DTI dla {ctx.author}")
+            if ctx.author.id not in blocklista:
+                serwer = bot.get_guild(id_serwera)
+                if str(ctx.content).lower() in wariacje_nauczycieli:
+                    await ctx.author.send(ostrzezenie_autoryzacji)
+                    print(f"{ctx.author} usiłował się zalogować jako nauczyciel")
+                elif ctx.content == "1ATPDPI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATPDPI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1ATPDPI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1ATPDPI dla {ctx.author}")
+                elif ctx.content == "1ATGPC":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATGPC"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
+                elif ctx.content == "1BTGPC":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1BTGPC"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
+                elif ctx.content == "1CTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1CTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1CTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1CTI dla {ctx.author}")
+                elif ctx.content == "1DTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1DTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1DTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1DTI dla {ctx.author}")
+                elif ctx.content == "1DTM":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1DTM"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1DTM dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1DTM dla {ctx.author}")
+                elif ctx.content == "1ETGPC":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ETGPC"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1ETGPC dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1ETGPC dla {ctx.author}")
+                elif ctx.content == "1FTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1FTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1FTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1FTI dla {ctx.author}")
+                elif ctx.content == "1FTM":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1FTM"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1FTM dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1FTM dla {ctx.author}")
+                elif ctx.content == "1GTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1GTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 1GTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 1GTI dla {ctx.author}")
+                elif ctx.content == "2ATPD":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2ATPD"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 2ATPD dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 2ATPD dla {ctx.author}")
+                elif ctx.content == "2ATGPC":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2ATGPC"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 2ATGPC dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 2ATGPC dla {ctx.author}")
+                elif ctx.content == "2CTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2CTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 2CTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 2CTI dla {ctx.author}")
+                elif ctx.content == "2DTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2DTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 2DTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 2DTI dla {ctx.author}")
+                elif ctx.content == "2DTM":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2DTM"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 2DTM dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 2DTM dla {ctx.author}")
+                elif ctx.content == "3ATPD":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3ATPD"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 3ATPD dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 3ATPD dla {ctx.author}")
+                elif ctx.content == "3ATGPC":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3ATGPC"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 3ATGPC dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 3ATGPC dla {ctx.author}")
+                elif ctx.content == "3BTGPC":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3BTGPC"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 3BTGPC dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 3BTGPC dla {ctx.author}")
+                elif ctx.content == "3CTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3CTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 3CTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 3CTI dla {ctx.author}")
+                elif ctx.content == "3DTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3DTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 3DTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 3DTI dla {ctx.author}")
+                elif ctx.content == "3DTM":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3DTM"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 3DTM dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 3DTM dla {ctx.author}")
+                elif ctx.content == "4ATPD":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4ATPD"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 4ATPD dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 4ATPD dla {ctx.author}")
+                elif ctx.content == "4ATM":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4ATM"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 4ATM dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 4ATM dla {ctx.author}")
+                elif ctx.content == "4BTCPG":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4BTCPG"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 4BTCPG dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 4BTCPG dla {ctx.author}")
+                elif ctx.content == "4CTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4CTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 4CTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 4CTI dla {ctx.author}")
+                elif ctx.content == "4DTI":
+                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4DTI"]), serwer.get_role(689119435151114345),))
+                    print(f"Przydzielono rolę 4DTI dla {ctx.author}")
+                    await ctx.author.send(f"Przydzielono rolę 4DTI dla {ctx.author}")
+                else:
+                    try:
+                        await ctx.author.send(blad_klasy)   # Przepraszam, ale to jedyny sposób żeby nie wywalało błędu w konsoli
+                    except:                                 # Znaczy, jakimś cudem działa pomimo błędu
+                        pass                                # Python jest dziwny.
             else:
-                try:
-                    await ctx.author.send(blad_klasy)   # Przepraszam, ale to jedyny sposób żeby nie wywalało błędu w konsoli
-                except:                                 # Znaczy, jakimś cudem działa pomimo błędu
-                    pass                                # Python jest dziwny.
+                pass
+            
 
 class Policjant(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.index = 0
+        self.test_nicku.start()
+
+    def cog_unload(self):
+        self.test_nicku.cancel()
 
     @commands.command()
     async def aresztuj(self, ctx, member):
-        await ctx.send(f"Aresztowano {ctx.member}")
+        await ctx.send(f"Aresztowano {member}")
 
-# class Zabawa(commands.Cog):
-#     def __init__(self, bot):
-#         self.bot = bot
+    # @tasks.loop(seconds=30)
+    # async def test_nicku(self):
+    #     uzytkownicy = await bot.get_guild(id_serwera).fetch_members().flatten()
+    #     print(self.index)
+    #     self.index += 1
+    #     for uzytkownik in uzytkownicy:
+    #         if re.match("[A-Z]{1}[a-zA-Z] *\s[A-Z]{1}[a-zA-Z]*", uzytkownik.name) == True:
+    #             uzytkownik.send("Zmień nick na swoje Imię i Nazwisko (Z dużych liter!)")
+    #             print(f"Użytkownik {uzytkownik} zostal [powiadomiony o zmianie nicku")
 
-#     # $firstwords - First message the bot has saved from player
-#     # !ping - Get ping of yourself or someone else.
-#     # !time - Time in ticks
-#     # !sleep - Tells you if you can sleep or not
-#     # !report - Report someone to server moderators for breaking the rules.
-#     # !rules - Rules of the server
-#     # !no - NO
-#     # !yes - YES
-#     # !ip - find location and isp of an ip or domain.
-#     # !dox - find someones ip
-#     # !nwordcount - !nwordcount PLAYER - check how many nwords the player has said. Added for black history month.
-#     # !y/n - Yes or no
-#     # !dice - Roll a die
-#     # !infect - infect someone with autisms.
-#     # !askgod / !askallah / !askrusher - ask
-#     # !kill - kill someone
-#     # !op - Op yourself or someone else
-#     # !bless - bless someone. You are a good person.
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
                    description=wiadomosc_info, help_command=None)
