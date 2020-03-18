@@ -266,7 +266,7 @@ class Policjant(commands.Cog):
 
     @commands.command()
     async def aresztuj(self, ctx, member):
-        await ctx.send(f"Aresztowano {ctx.member}")
+        await ctx.send(f"Aresztowano {member}")
 
 class Zabawa(commands.Cog):
     def __init__(self, bot):
@@ -274,19 +274,59 @@ class Zabawa(commands.Cog):
 
     @commands.command()
     async def czas(self, ctx):
-        await ctx.send(f"Aktualny czas to: {time.mktime(datetime.datetime.now().timetuple())}")
+        await ctx.send(f"Aktualny czas to: {int(round(time.mktime(datetime.datetime.now().timetuple()), 1))}s")
 
     @commands.command()
     async def zainfekuj(self, ctx, member):
-        await ctx.send(f"{ctx.author} zainfekował {ctx.member} Koronawirusem")
+        await ctx.send(f"{ctx.author.name} zainfekował {member} Koronawirusem")
 
+    @commands.command()
+    async def tak(self, ctx):
+        await ctx.send("""```
+        ,----,                     
+      ,/   .`|                     
+    ,`   .'  :                ,-.  
+  ;    ;     /            ,--/ /|  
+.'___,/    ,'           ,--. :/ |  
+|    :     |            :  : ' /   
+;    |.';  ;  ,--.--.   |  '  /    
+`----'  |  | /       \  '  |  :    
+    '   :  ;.--.  .-. | |  |   \   
+    |   |  ' \__\/: . . '  : |. \  
+    '   :  | ," .--.; | |  | ' \ \ 
+    ;   |.' /  /  ,.  | '  : |--'  
+    '---'  ;  :   .'   \;  |,'     
+           |  ,     .-./'--'       
+            `--`---'                                       
+        ```""")
+
+    @commands.command()
+    async def nie(self, ctx):
+        await ctx.send("""```                            
+         ,--.                   
+       ,--.'|   ,---,    ,---,. 
+   ,--,:  : |,`--.' |  ,'  .' | 
+,`--.'`|  ' :|   :  :,---.'   | 
+|   :  :  | |:   |  '|   |   .' 
+:   |   \ | :|   :  |:   :  |-, 
+|   : '  '; |'   '  ;:   |  ;/| 
+'   ' ;.    ;|   |  ||   :   .' 
+|   | | \   |'   :  ;|   |  |-, 
+'   : |  ; .'|   |  ''   :  ;/| 
+|   | '`--'  '   :  ||   |    \ 
+'   : |      ;   |.' |   :   .' 
+;   |.'      '---'   |   | ,'   
+'---'                `----'                    
+        ```""")
+    
+    @commands.command()
+    async def dox(self, ctx, member):
+        await ctx.send(f"")
     # $firstwords - First message the bot has saved from player
     # $ping - Get ping of yourself or someone else.
     # $sleep - Tells you if you can sleep or not
     # $report - Report someone to server moderators for breaking the rules.
     # $rules - Rules of the server
-    # $no - NO
-    # $yes - YES
     # $ip - find location and isp of an ip or domain.
     # $dox - find someones ip
     # $nwordcount - !nwordcount PLAYER - check how many nwords the player has said. Added for black history month.
@@ -296,6 +336,16 @@ class Zabawa(commands.Cog):
     # $kill - kill someone
     # $op - Op yourself or someone else
     # $bless - bless someone. You are a good person.
+
+    # English Translations (Cross-Compatibility) - Ważne, aby ułatwić korzystanie
+    # HELP CUZ I DUN KNOW HOW TO DO THIS
+    @commands.command()
+    async def time(self, ctx):
+        await ctx.send(f"Current time is: {int(round(time.mktime(datetime.datetime.now().timetuple()), 1))}s")
+
+    @commands.command()
+    async def infect(self, ctx, member):
+        await ctx.send(f"{ctx.author.name} infected {member} with a dose of Autism")
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
                    description=wiadomosc_info, help_command=None)
