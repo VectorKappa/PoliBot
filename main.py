@@ -447,11 +447,10 @@ class Zabawa(commands.Cog):
 
     @commands.command()
     async def spanko(self, ctx):
-        godzina = datetime.time.hour()
-        if (godzina >= 23 or godzina <= 6):
-            await ctx.send("Spać! A nie nocki jakieś :night:")
+        if datetime.datetime.now().hour >= 23 or datetime.datetime.now().hour <= 6:
+            await ctx.send("Spać! A nie nocki jakieś :crescent_moon:")
         else:
-            await ctx.send("Trza było w nocy spać :day:")
+            await ctx.send("Trza było spać w nocy :sunny:")
 
     @commands.command()
     async def zgłoś(self, ctx, uzytkownik):
