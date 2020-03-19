@@ -3,6 +3,8 @@ import discord
 import youtube_dl
 import credentials
 import re
+from urllib.request import urlopen
+from json import load
 from discord.ext import tasks, commands
 import datetime
 import time
@@ -22,10 +24,11 @@ wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehre
 
 # Komunikaty
 wiadomosc_info = "To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot"
-lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zgłos - zgłoś kogoś moderatorom za łamanie zasad \n $zasady - wyświetla zasady serwera \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź kogoś adres ip \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś Koronawirusem \n $zapytajboga - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
+lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zgłos - zgłoś kogoś moderatorom za łamanie zasad \n $zasady - wyświetla zasady serwera \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź adres ip użytkownika \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś koronawirusem \n $zapytajboga - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
 wybor_klasy = "Witamy na szkolnym serwerze ZSPM! Podaj nam klasę, do której uczęszczasz: \n1ATPDPI\n1ATGPC\n1BTGPC\n1CTI\n1DTI\n1DTM\n1ETGPC\n1FTI\n1FTM\n1GTI\n2ATPD\n2ATGPC\n2CTI\n2DTI\n2DTM\n3ATPD\n3ATGPC\n3BTGPC\n3CTI\n3DTI\n3DTM\n4ATPD\n4ATM\n4BTCPG\n4CTI\n4DTI"
 ostrzezenie_autoryzacji = "Próbowałeś, ale nie. Incydent zgłoszono. \n Chyba że naprawdę jesteś nauczycielem. Wtedy napisz do kogoś z administracji."
 blad_klasy = "Podaj klasę z listy!"
+dekalog = "```1 .   Dołączyć do serwera mogą tylko i wyłącznie uczniowie, nauczyciele oraz absolwenci naszej szkoły. Aby zweryfikować swoją tożsamość, odpowiedz na prywatną wiadomość wysłaną przez @PoliBot\n2.   Na serwerze obowiązuje kultura. Prosimy o zwracanie się do siebie z szacunkiem.\n3.   Zakaz spamowania.\n4.   Zakaz reklamowania.\n5.   Zakaz używania i zapraszania klienckich botów na serwer.\n6.   Prosimy o korzystanie z serwera pod swoim imieniem i nazwiskiem.\n7.   Każda klasa ma wydzielone dla siebie kanały głosowe i tekstowe, a nauczyciele mogą wejść na każdy kanał.\n8.   Trzy ostrzeżenia kończą się banem.\n9.   Za poważne przewinienia ban jest automatyczny i bezapelacyjny.\n10.   Prosimy o stosowanie się do Warunków Użytkowania aplikacji Discord.```"
 tak = ("""```
         ,----,                     
       ,/   .`|                     
@@ -497,10 +500,29 @@ class Zabawa(commands.Cog):
     async def zabij(self, ctx, uzytkownik):
         await ctx.send(f"{ctx.author.mention} zabił {uzytkownik}") 
 
+    @commands.command()
+    async def zasady(self, ctx):
+        await ctx.send('Wysłałem ci zasady na PM')
+        await ctx.author.send(dekalog)
+
+    @commands.command()
+    async def ip(self, ctx, ip):
+        url = 'https://ipinfo.io/' + ip + '/json'
+        odpowiedź = urlopen(url)
+        dane = load(odpowiedź)
+        org=dane['org']
+        city = dane['city']
+        country=dane['country']
+        region=dane['region']
+        await ctx.send('Lokalizacja: {1}, {2}, {3} ISP: {0}'.format(org,city,region,country))
+
+    @commands.command()
+    async def ping(self, ctx):
+        await ctx.send(f"Pong! {int(bot.latency*1000)}ms")
+
     # TO DO
+    # $przekleństwa - licznik przeklęśtw?
     # $pierwsze-slowa - pierwsza wiadomość gracza na serwerze
-    # $ping - sprawdź ping bota
-    # $ip - sprawdź lokalizację i isp podanego adresu lub domeny
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
                    description=wiadomosc_info, help_command=None)
 
@@ -535,6 +557,7 @@ bot.run(token)
 # $kostka - rzuć kostką
 # $zainfekuj - zainfekuj kogoś Koronawirusem
 # $zapytajboga - zapytaj
+# $zasady - wyświetla zasady serwera
 # $zabij - zabij kogoś
 # $op - daj komuś opa
 # $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.
