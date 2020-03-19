@@ -22,7 +22,7 @@ wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehre
 
 # Komunikaty
 wiadomosc_info = "To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot"
-lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zglos - zgłoś kogoś moderatorom za łamanie zasad \n $zasady - wyświetla zasady serwera \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź kogoś adres ip \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś Koronawirusem \n $zapytajboga / $zapytajallaha - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
+lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zgłos - zgłoś kogoś moderatorom za łamanie zasad \n $zasady - wyświetla zasady serwera \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź kogoś adres ip \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś Koronawirusem \n $zapytajboga - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
 wybor_klasy = "Witamy na szkolnym serwerze ZSPM! Podaj nam klasę, do której uczęszczasz: \n1ATPDPI\n1ATGPC\n1BTGPC\n1CTI\n1DTI\n1DTM\n1ETGPC\n1FTI\n1FTM\n1GTI\n2ATPD\n2ATGPC\n2CTI\n2DTI\n2DTM\n3ATPD\n3ATGPC\n3BTGPC\n3CTI\n3DTI\n3DTM\n4ATPD\n4ATM\n4BTCPG\n4CTI\n4DTI"
 ostrzezenie_autoryzacji = "Próbowałeś, ale nie. Incydent zgłoszono. \n Chyba że naprawdę jesteś nauczycielem. Wtedy napisz do kogoś z administracji."
 blad_klasy = "Podaj klasę z listy!"
@@ -152,6 +152,7 @@ o8o        `8  o888o `Y8bod8P'
         ```""",)
 
 tn = ["Tak.", "Nie."]
+god = ["Lepiej żebyś tego jeszcze nie wiedział", "To jest pewne, może?", "Nie mogę tego teraz przewidzieć", "Czemu miałbym ci mówić?"]
 # Opcje youtube_dl
 opcje_ytdl = {
     'format': 'bestaudio/best',
@@ -425,25 +426,16 @@ class Przydzielaczka(commands.Cog):
 class Policjant(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.index = 0
-        self.test_nicku.start()
-
-    def cog_unload(self):
-        self.test_nicku.cancel()
 
     @commands.command()
-    async def aresztuj(self, ctx, member):
-        await ctx.send(f"Aresztowano {member}")
+    async def aresztuj(self, ctx, użytkownik):
+        await ctx.send(f"Aresztowano {użytkownik}")
 
-    # @tasks.loop(seconds=30)
-    # async def test_nicku(self):
-    #     uzytkownicy = await bot.get_guild(id_serwera).fetch_members().flatten()
-    #     print(self.index)
-    #     self.index += 1
-    #     for uzytkownik in uzytkownicy:
-    #         if re.match("[A-Z]{1}[a-zA-Z] *\s[A-Z]{1}[a-zA-Z]*", uzytkownik.name) == True:
-    #             uzytkownik.send("Zmień nick na swoje Imię i Nazwisko (Z dużych liter!)")
-    #             print(f"Użytkownik {uzytkownik} zostal [powiadomiony o zmianie nicku")
+    @commands.command()
+    async def przypomnij(self, ctx, czas, *, wiadomość):
+        await ctx.send(f"Przypomnę ci \"{wiadomość}\" za {czas}s")
+        await asyncio.sleep(int(czas))
+        await ctx.author.send(f"Przypominam o {wiadomość}")
 
 class Zabawa(commands.Cog):
     def __init__(self, bot):
@@ -451,25 +443,19 @@ class Zabawa(commands.Cog):
 
     @commands.command()
     async def czas(self, ctx):
-        await ctx.send(f"Aktualny czas to: {int(round(time.mktime(datetime.datetime.now().timetuple()), 1))}s (od 1/1/1970)")
+        await ctx.send(f"Aktualny czas to: {time.time()}s (od 1/1/1970)")
 
     @commands.command()
     async def spanko(self, ctx):
-        now = datetime.datetime.now()
-        x = now.hour()
-        if (x >= 23 or x <= 6):
+        godzina = datetime.time.hour()
+        if (godzina >= 23 or godzina <= 6):
             await ctx.send("Spać! A nie nocki jakieś :night:")
         else:
-            await ctx.send("Trza było w nocy spać :day: ")
+            await ctx.send("Trza było w nocy spać :day:")
 
     @commands.command()
-    async def zglos(self, ctx, uzytkownik):
-        await ctx.send(f"{ctx.author.mention} zgłosił {uzytkownik} administracji. Miej się na baczności!") 
-
-    @commands.command()
-    async def zasady(self, ctx):
-        await ctx.send('Wysłałem ci listę komend na PM')
-        await ctx.author.send(lista_komend)
+    async def zgłoś(self, ctx, uzytkownik):
+        await ctx.send(f"{ctx.author.mention} zgłosił {uzytkownik} administracji. Miej się na baczności!")
 
     @commands.command()
     async def zainfekuj(self, ctx, uzytkownik):
@@ -489,31 +475,34 @@ class Zabawa(commands.Cog):
 
     @commands.command()
     async def dox(self, ctx, uzytkownik):
-        await ctx.send(f"Adres IP {uzytkownik} to {random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)} ez")
+        await ctx.send(f"Adres IP {uzytkownik} to {random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}")
 
     @commands.command()
-    async def kostka(self, ctx, ilosc_rzutow = 1, ilosc_scianek = 6):
-        for i in range(ilosc_rzutow):
-            wynik = []
-            return wynik.append(str(random.randint(1, ilosc_scianek))+" ")
-        await ctx.send(str(wynik))
+    async def kostka(self, ctx, ilosc_scianek = 6):
+        await ctx.send(str(random.randint(1, ilosc_scianek)))
     
     @commands.command()
     async def op(self, ctx, uzytkownik):
         await ctx.send(f"{uzytkownik} otrzymał uprawnienia Administratora.")
 
+    @commands.command()
+    async def pobłogosław(self, ctx, uzytkownik):
+        await ctx.send(f"{ctx.author.mention} pobłogosławił {uzytkownik}. Ale dobra osoba.") 
+
+    @commands.command()
+    async def zapytajboga(self, ctx):
+        await ctx.send(god[random.randint(0, len(god)-1)]) 
+    
+    @commands.command()
+    async def zabij(self, ctx, uzytkownik):
+        await ctx.send(f"{ctx.author.mention} zabił {uzytkownik}") 
+
     # TO DO
     # $pierwsze-slowa - pierwsza wiadomość gracza na serwerze
     # $ping - sprawdź ping bota
     # $ip - sprawdź lokalizację i isp podanego adresu lub domeny
-    # $kostka - rzuć kostką
-    # $zapytajboga / $zapytajallaha - zapytaj
-    # $zabij - zabij kogoś
-    # $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.
-
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
                    description=wiadomosc_info, help_command=None)
-
 
 @bot.event
 async def on_ready():
@@ -525,7 +514,7 @@ bot.add_cog(Info(bot))
 bot.add_cog(Muzyka(bot))
 bot.add_cog(Przydzielaczka(bot))
 bot.add_cog(Logger(bot))
-# bot.add_cog(Policjant(bot))
+bot.add_cog(Policjant(bot))
 bot.add_cog(Zabawa(bot))
 
 bot.run(token)
@@ -537,8 +526,7 @@ bot.run(token)
 # $ping - sprawdź ping bota
 # $czas - wyświetla aktualny czas
 # $spanko - mówi ci czy możesz spać czy nie
-# $zglos - zgłoś kogoś moderatorom za łamanie zasad
-# $zasady - wyświetla zasady serwera
+# $zgłos - zgłoś kogoś moderatorom za łamanie zasad
 # $nie - NIE
 # $tak - TAK
 # $ip - sprawdź lokalizację i isp podanego adresu lub domeny
@@ -546,7 +534,7 @@ bot.run(token)
 # $tn - tak lub nie
 # $kostka - rzuć kostką
 # $zainfekuj - zainfekuj kogoś Koronawirusem
-# $zapytajboga / $zapytajallaha - zapytaj
+# $zapytajboga - zapytaj
 # $zabij - zabij kogoś
 # $op - daj komuś opa
 # $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.
