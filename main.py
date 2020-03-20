@@ -24,12 +24,12 @@ wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehre
 
 # Komunikaty
 wiadomosc_info = "To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot"
-lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zgłos - zgłoś kogoś moderatorom za łamanie zasad \n $zasady - wyświetla zasady serwera \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź adres ip użytkownika \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś koronawirusem \n $zapytajboga - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
+lista_komend = "```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zgłos - zgłoś kogoś moderatorom za łamanie zasad \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź adres ip użytkownika \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś koronawirusem \n $zapytajboga - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
+radio_komendy = "```Komendy dotyczące sterowania radiem: \n $radio - kontroluje radio```"
 wybor_klasy = "Witamy na szkolnym serwerze ZSPM! Podaj nam klasę, do której uczęszczasz: \n1ATPDPI\n1ATGPC\n1BTGPC\n1CTI\n1DTI\n1DTM\n1ETGPC\n1FTI\n1FTM\n1GTI\n2ATPD\n2ATGPC\n2CTI\n2DTI\n2DTM\n3ATPD\n3ATGPC\n3BTGPC\n3CTI\n3DTI\n3DTM\n4ATPD\n4ATM\n4BTCPG\n4CTI\n4DTI"
 ostrzezenie_autoryzacji = "Próbowałeś, ale nie. Incydent zgłoszono. \n Chyba że naprawdę jesteś nauczycielem. Wtedy napisz do kogoś z administracji."
 blad_klasy = "Podaj klasę z listy!"
-dekalog = "```1 .   Dołączyć do serwera mogą tylko i wyłącznie uczniowie, nauczyciele oraz absolwenci naszej szkoły. Aby zweryfikować swoją tożsamość, odpowiedz na prywatną wiadomość wysłaną przez @PoliBot\n2.   Na serwerze obowiązuje kultura. Prosimy o zwracanie się do siebie z szacunkiem.\n3.   Zakaz spamowania.\n4.   Zakaz reklamowania.\n5.   Zakaz używania i zapraszania klienckich botów na serwer.\n6.   Prosimy o korzystanie z serwera pod swoim imieniem i nazwiskiem.\n7.   Każda klasa ma wydzielone dla siebie kanały głosowe i tekstowe, a nauczyciele mogą wejść na każdy kanał.\n8.   Trzy ostrzeżenia kończą się banem.\n9.   Za poważne przewinienia ban jest automatyczny i bezapelacyjny.\n10.   Prosimy o stosowanie się do Warunków Użytkowania aplikacji Discord.```"
-tak = ("""```
+tak = (r"""```
         ,----,                     
       ,/   .`|                     
     ,`   .'  :                ,-.  
@@ -45,7 +45,7 @@ tak = ("""```
     '---'  ;  :   .'   \;  |,'     
            |  ,     .-./'--'       
             `--`---'                                       
-        ```""", """```
+        ```""", r"""```
  /$$$$$$$$        /$$      
 |__  $$__/       | $$      
    | $$  /$$$$$$ | $$   /$$
@@ -54,21 +54,21 @@ tak = ("""```
    | $$ /$$__  $$| $$_  $$ 
    | $$|  $$$$$$$| $$ \  $$
    |__/ \_______/|__/  \__/              
-        ```""", """```
+        ```""", r"""```
   _______    _    
  |__   __|  | |   
     | | __ _| | __
     | |/ _` | |/ /
     | | (_| |   < 
-    |_|\__,_|_|\_\\
-        ```""", """```
+    |_|\__,_|_|\_\
+        ```""", r"""```
 .------..------..------.
 |T.--. ||A.--. ||K.--. |
 | :/\: || (\/) || :/\: |
 | (__) || :\/: || :\/: |
 | '--'T|| '--'A|| '--'K|
 `------'`------'`------'
-        ```""", """```
+        ```""", r"""```
 ooooooooooooo           oooo        
 8'   888   `8           `888        
      888       .oooo.    888  oooo  
@@ -76,7 +76,7 @@ ooooooooooooo           oooo
      888       .oP"888   888888.    
      888      d8(  888   888 `88b.  
     o888o     `Y888""8o o888o o888o                 
-        ```""", """```
+        ```""", r"""```
 ▄▄▄█████▓ ▄▄▄       ██ ▄█▀
 ▓  ██▒ ▓▒▒████▄     ██▄█▒ 
 ▒ ▓██░ ▒░▒██  ▀█▄  ▓███▄░ 
@@ -86,13 +86,13 @@ ooooooooooooo           oooo
     ░      ▒   ▒▒ ░░ ░▒ ▒░
   ░        ░   ▒   ░ ░░ ░ 
                ░  ░░  ░   
-        ```""", """```
+        ```""", r"""```
  ____ ____ ____ 
 ||T |||a |||k ||
 ||__|||__|||__||
 |/__\|/__\|/__\|
         ```""",)
-nie = ("""```
+nie = (r"""```
          ,--.                   
        ,--.'|   ,---,    ,---,. 
    ,--,:  : |,`--.' |  ,'  .' | 
@@ -107,7 +107,7 @@ nie = ("""```
 '   : |      ;   |.' |   :   .' 
 ;   |.'      '---'   |   | ,'   
 '---'                `----'                                            
-        ```""", """```
+        ```""", r"""```
  /$$   /$$ /$$          
 | $$$ | $$|__/          
 | $$$$| $$ /$$  /$$$$$$ 
@@ -116,20 +116,20 @@ nie = ("""```
 | $$\  $$$| $$| $$_____/
 | $$ \  $$| $$|  $$$$$$$
 |__/  \__/|__/ \_______/         
-        ```""", """```
+        ```""", r"""```
   _   _ _      
  | \ | (_) ___ 
- |  \| | |/ _ \\
+ |  \| | |/ _ \
  | |\  | |  __/
  |_| \_|_|\___|
-        ```""", """```
+        ```""", r"""```
 .------..------..------.
 |N.--. ||I.--. ||E.--. |
 | :(): || (\/) || (\/) |
 | ()() || :\/: || :\/: |
 | '--'N|| '--'I|| '--'E|
 `------'`------'`------'
-        ```""", """```
+        ```""", r"""```
 ooooo      ooo  o8o            
 `888b.     `8'  `"'            
  8 `88b.    8  oooo   .ooooo.  
@@ -137,7 +137,7 @@ ooooo      ooo  o8o
  8     `88b.8   888  888ooo888 
  8       `888   888  888    .o 
 o8o        `8  o888o `Y8bod8P'                                     
-        ```""", """```
+        ```""", r"""```
  ███▄    █  ██▓▓█████ 
  ██ ▀█   █ ▓██▒▓█   ▀ 
 ▓██  ▀█ ██▒▒██▒▒███   
@@ -147,7 +147,7 @@ o8o        `8  o888o `Y8bod8P'
 ░ ░░   ░ ▒░ ▒ ░ ░ ░  ░
    ░   ░ ░  ▒ ░   ░   
          ░  ░     ░  ░
-        ```""", """```
+        ```""", r"""```
  ____ ____ ____ 
 ||N |||i |||e ||
 ||__|||__|||__||
@@ -212,9 +212,16 @@ class Info(commands.Cog):
         await ctx.send(wiadomosc_info)
 
     @commands.command()
-    async def komendy(self, ctx):
-        await ctx.send('Wysłałem ci listę komend na PM')
-        await ctx.author.send(lista_komend)
+    async def komendy(self, ctx, komenda="wszystkie"): # Należy wykończyć dokumentację, gdy stworzymy wszytkie komendy
+        if (komenda == "wszystkie"):
+            await ctx.send('Wysłałem ci listę komend na PM')
+            await ctx.author.send(lista_komend)
+        elif (komenda == "radio"):
+            await ctx.send('Pomoc dotyczącą radia wysłałem ci na PM')
+            await ctx.author.send(radio_komendy)
+        else: # Aktualny Fallback, może byćz zmieniony później
+            await ctx.send('Wysłałem ci listę komend na PM')
+            await ctx.author.send(lista_komend)
 
 class Muzyka(commands.Cog):
     def __init__(self, bot):
@@ -439,6 +446,26 @@ class Policjant(commands.Cog):
         await ctx.send(f"Przypomnę ci \"{wiadomość}\" za {czas}s")
         await asyncio.sleep(int(czas))
         await ctx.author.send(f"Przypominam o {wiadomość}")
+    
+    # @commands.command()
+    # async def test_nicku(self, ctx):
+    #     uzytkownicy = await bot.get_guild(id_serwera).fetch_members().flatten()
+    #     print(self.index)
+    #     self.index += 1
+    #     for uzytkownik in uzytkownicy:
+    #         if re.match(r"[A-Z]{1}[a-zA-Z] *\s[A-Z]{1}[a-zA-Z]*", uzytkownik.name) == True:
+    #             uzytkownik.send("Zmień nick na swoje Imię i Nazwisko (Z dużych liter!)")
+    #             print(f"Użytkownik {uzytkownik} zostal [powiadomiony o zmianie nicku")
+
+    # @tasks.loop(seconds=30)
+    # async def test_nicku(self):
+    #     uzytkownicy = await bot.get_guild(id_serwera).fetch_members().flatten()
+    #     print(self.index)
+    #     self.index += 1
+    #     for uzytkownik in uzytkownicy:
+    #         if re.match("[A-Z]{1}[a-zA-Z] *\s[A-Z]{1}[a-zA-Z]*", uzytkownik.name) == True:
+    #             uzytkownik.send("Zmień nick na swoje Imię i Nazwisko (Z dużych liter!)")
+    #             print(f"Użytkownik {uzytkownik} zostal [powiadomiony o zmianie nicku")
 
 class Zabawa(commands.Cog):
     def __init__(self, bot):
@@ -501,11 +528,6 @@ class Zabawa(commands.Cog):
         await ctx.send(f"{ctx.author.mention} zabił {uzytkownik}") 
 
     @commands.command()
-    async def zasady(self, ctx):
-        await ctx.send('Wysłałem ci zasady na PM')
-        await ctx.author.send(dekalog)
-
-    @commands.command()
     async def ip(self, ctx, ip):
         url = 'https://ipinfo.io/' + ip + '/json'
         odpowiedź = urlopen(url)
@@ -557,7 +579,6 @@ bot.run(token)
 # $kostka - rzuć kostką
 # $zainfekuj - zainfekuj kogoś Koronawirusem
 # $zapytajboga - zapytaj
-# $zasady - wyświetla zasady serwera
 # $zabij - zabij kogoś
 # $op - daj komuś opa
 # $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.
