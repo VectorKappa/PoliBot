@@ -435,37 +435,64 @@ class Przydzielaczka(commands.Cog):
 
 class Policjant(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
+        self.bot = bot       
 
     @commands.command()
+    @commands.has_any_role("Administracja")
     async def aresztuj(self, ctx, użytkownik):
         await ctx.send(f"Aresztowano {użytkownik}")
 
     @commands.command()
+    @commands.has_any_role("Administracja")
+    async def tomek(self, ctx, użytkownik):
+        # Przenieś do Więzienia
+        # $play https://youtu.be/qclDfyIdMDk
+        await ctx.send(f"{użytkownik} został za-tomkowany. Oof.")
+
+    @commands.command()
+    @commands.has_any_role("Administracja")
     async def przypomnij(self, ctx, czas, *, wiadomość):
         await ctx.send(f"Przypomnę ci \"{wiadomość}\" za {czas}s")
         await asyncio.sleep(int(czas))
         await ctx.author.send(f"Przypominam o {wiadomość}")
-    
-    # @commands.command()
-    # async def test_nicku(self, ctx):
-    #     uzytkownicy = await bot.get_guild(id_serwera).fetch_members().flatten()
-    #     print(self.index)
-    #     self.index += 1
-    #     for uzytkownik in uzytkownicy:
-    #         if re.match(r"[A-Z]{1}[a-zA-Z] *\s[A-Z]{1}[a-zA-Z]*", uzytkownik.name) == True:
-    #             uzytkownik.send("Zmień nick na swoje Imię i Nazwisko (Z dużych liter!)")
-    #             print(f"Użytkownik {uzytkownik} zostal [powiadomiony o zmianie nicku")
 
-    # @tasks.loop(seconds=30)
-    # async def test_nicku(self):
-    #     uzytkownicy = await bot.get_guild(id_serwera).fetch_members().flatten()
-    #     print(self.index)
-    #     self.index += 1
-    #     for uzytkownik in uzytkownicy:
-    #         if re.match("[A-Z]{1}[a-zA-Z] *\s[A-Z]{1}[a-zA-Z]*", uzytkownik.name) == True:
-    #             uzytkownik.send("Zmień nick na swoje Imię i Nazwisko (Z dużych liter!)")
-    #             print(f"Użytkownik {uzytkownik} zostal [powiadomiony o zmianie nicku")
+    @commands.command()
+    @commands.has_any_role("Administracja")
+    async def test_nicku(self, ctx):
+        wzór = re.compile('[A-Z]{1}[a-zą-ż]*\s[A-Z]{1}[a-zą-ż]*') # UppLetter*1+Infinite LowerLetter + 1 space + 1 uppletter + infinite LowerLetter
+        niepoprawni_użytkownicy = []
+        sprawdzanie = "Sprawdzanie zgodności ze wzorem..."
+        zmien_nick = "Zmień swój nick na swoje Imię i Nazwisko (Zaczynając od wielkich liter!)"
+        await ctx.send(sprawdzanie)
+        try:
+            for użytkownik in ctx.guild.members: 
+                if str(użytkownik.nick) == "None":
+                    if str(użytkownik) == "PoliBot Dev#6303": # WAŻNE BO INACZEJ BOT BĘDZIE PISAŁ SAM DO SIEBIE!
+                        print("Pomijanie siebie podczas sprawdzania...")
+                    else:
+                        nazwa = str(str(użytkownik)[:-5])
+                        rezultat = re.match(wzór, nazwa)
+                        if not rezultat:
+                            try:
+                                await użytkownik.send(zmien_nick)
+                                print(f"Użytkownik {użytkownik} został powiadomiony o zmianie nicku")
+                                niepoprawni_użytkownicy.append(str(użytkownik))
+                            except:
+                                print(f"Użytkownik {użytkownik} NIE został powiadomiony o zmianie nicku")
+                else:    
+                    rezultat = re.match(wzór, str(użytkownik.nick))
+                    if not rezultat:
+                        try:
+                            await użytkownik.send(zmien_nick)
+                            print(f"Użytkownik {użytkownik} został powiadomiony o zmianie nicku")
+                            niepoprawni_użytkownicy.append(str(użytkownik))
+                        except:
+                            print(f"Użytkownik {użytkownik} NIE został powiadomiony o zmianie nicku")
+            niepoprawni_użytkownicy = str(', '.join(niepoprawni_użytkownicy))
+            await ctx.send("Polecenie wykonano pomyślnie!")
+            await ctx.send(f"```Powiadomieni zostali:\n {niepoprawni_użytkownicy}```")
+        except:
+            await ctx.send("Wystąpił Krytyczny Błąd!")
 
 class Zabawa(commands.Cog):
     def __init__(self, bot):
@@ -509,6 +536,14 @@ class Zabawa(commands.Cog):
     @commands.command()
     async def kostka(self, ctx, ilosc_scianek = 6):
         await ctx.send(str(random.randint(1, ilosc_scianek)))
+    
+    # @commands.command()
+    # async def kostka(self, ctx, params):
+    #     regExp = re.compile("d([\d]*)(\+)?(?(2)([\d]*))")
+    #     res = regExp.match(params)
+    #     sides = int(res.group(1))
+    #     modifier = int(res.group(3)) if res.group(3).isnumeric() else 0
+    #     await ctx.send(f"Losuje {sides}d+{modifier}: {str(random.randint(1,sides)+modifier)}")
     
     @commands.command()
     async def op(self, ctx, uzytkownik):
