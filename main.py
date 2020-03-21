@@ -18,7 +18,7 @@ token = credentials.getToken()
 id_serwera = credentials.getServerId()
 lista_roli = credentials.getRole()
 blocklista = credentials.getBlocklist()
-
+nazwa_bota = credentials.getBotName()
 # Wariacje zmiennych
 wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehrer", "nauczycielka", "lehrerin", "profesor", "profesorka")
 
@@ -467,7 +467,7 @@ class Policjant(commands.Cog):
         try:
             for użytkownik in ctx.guild.members: 
                 if str(użytkownik.nick) == "None":
-                    if str(użytkownik) == "PoliBot Dev#6303": # WAŻNE BO INACZEJ BOT BĘDZIE PISAŁ SAM DO SIEBIE!
+                    if str(użytkownik) == nazwa_bota: # WAŻNE BO INACZEJ BOT BĘDZIE PISAŁ SAM DO SIEBIE!
                         print("Pomijanie siebie podczas sprawdzania...")
                     else:
                         nazwa = str(str(użytkownik)[:-5])

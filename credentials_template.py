@@ -7,3 +7,5 @@ def getRole():
 def getBlocklist():
     lista = [blokowane_ID,]
     return lista
+def getBotName():
+    return "NazwaBota#1234"
