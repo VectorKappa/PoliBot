@@ -459,7 +459,7 @@ class Policjant(commands.Cog):
     @commands.command()
     @commands.has_any_role("Administracja")
     async def test_nicku(self, ctx):
-        wzór = re.compile('[A-Z]{1}[a-zą-ż]*\s[A-Z]{1}[a-zą-ż]*') # UppLetter*1+Infinite LowerLetter + 1 space + 1 uppletter + infinite LowerLetter
+        wzór = re.compile(r"[A-ZĄ-Ż]{1}[a-zą-ż]*\s[A-ZĄ-Ż]{1}[a-zą-ż]*(\-)?(?(1)[A-ZĄ-Ż]{1}[a-zą-ż]*)") # Wielka Litera, Małe Litery, Spacja, Wielka Litera, Małe litery, opcjonalnie Myślnik, Wielka Litera, Małe litery
         niepoprawni_użytkownicy = []
         sprawdzanie = "Sprawdzanie zgodności ze wzorem..."
         zmien_nick = "Zmień swój nick na swoje Imię i Nazwisko (Zaczynając od wielkich liter!)"
@@ -530,20 +530,20 @@ class Zabawa(commands.Cog):
         await ctx.send(tn[random.randint(0, 1)])
 
     @commands.command()
-    async def dox(self, ctx, uzytkownik):
-        await ctx.send(f"Adres IP {uzytkownik} to {random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}")
-
-    @commands.command()
-    async def kostka(self, ctx, ilosc_scianek = 6):
-        await ctx.send(str(random.randint(1, ilosc_scianek)))
+    async def dox(self, ctx, uzytkownik="▓"):
+        if not uzytkownik == "▓":
+            await ctx.send(f"Adres IP {uzytkownik} to {random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}")
+        else:
+            await ctx.send("Błond, Dżejms Błond")
     
-    # @commands.command()
-    # async def kostka(self, ctx, params):
-    #     regExp = re.compile("d([\d]*)(\+)?(?(2)([\d]*))")
-    #     res = regExp.match(params)
-    #     sides = int(res.group(1))
-    #     modifier = int(res.group(3)) if res.group(3).isnumeric() else 0
-    #     await ctx.send(f"Losuje {sides}d+{modifier}: {str(random.randint(1,sides)+modifier)}")
+    @commands.command()
+    async def kostka(self, ctx, params = 'd20', amount = 1,):
+        for i in range(amount):
+            regExp = re.compile(r"d([\d]*)(\+)?(?(2)([\d]*))")
+            res = regExp.match(params)
+            sides = int(res.group(1))
+            modifier = int(res.group(3)) if str(res.group(3)).isnumeric() else 0
+            await ctx.send(f"Losuje d{sides}+{modifier}: **{str(random.randint(1,sides)+modifier)}**")
     
     @commands.command()
     async def op(self, ctx, uzytkownik):
@@ -563,14 +563,17 @@ class Zabawa(commands.Cog):
 
     @commands.command()
     async def ip(self, ctx, ip):
-        url = 'https://ipinfo.io/' + ip + '/json'
-        odpowiedź = urlopen(url)
-        dane = load(odpowiedź)
-        org=dane['org']
-        city = dane['city']
-        country=dane['country']
-        region=dane['region']
-        await ctx.send('Lokalizacja: {1}, {2}, {3} ISP: {0}'.format(org,city,region,country))
+        try:
+            url = 'https://ipinfo.io/' + ip + '/json'
+            odpowiedź = urlopen(url)
+            dane = load(odpowiedź)
+            org=dane['org']
+            city = dane['city']
+            country=dane['country']
+            region=dane['region']
+            await ctx.send('Lokalizacja: {1}, {2}, {3} ISP: {0}'.format(org,city,region,country))
+        except:
+            await ctx.send("Adres nie istnieje lub jest niepoprawny")
 
     @commands.command()
     async def ping(self, ctx):
@@ -579,6 +582,7 @@ class Zabawa(commands.Cog):
     # TO DO
     # $przekleństwa - licznik przeklęśtw?
     # $pierwsze-slowa - pierwsza wiadomość gracza na serwerze
+
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
                    description=wiadomosc_info, help_command=None)
 
