@@ -545,6 +545,14 @@ class Zabawa(commands.Cog):
             modifier = int(res.group(3)) if str(res.group(3)).isnumeric() else 0
             await ctx.send(f"Losuje d{sides}+{modifier}: **{str(random.randint(1,sides)+modifier)}**")
     
+    # @commands.command()
+    # async def kostka(self, ctx, params):
+    #     regExp = re.compile("d([\d]*)(\+)?(?(2)([\d]*))")
+    #     res = regExp.match(params)
+    #     sides = int(res.group(1))
+    #     modifier = int(res.group(3)) if res.group(3).isnumeric() else 0
+    #     await ctx.send(f"Losuje {sides}d+{modifier}: {str(random.randint(1,sides)+modifier)}")
+    
     @commands.command()
     async def op(self, ctx, uzytkownik):
         await ctx.send(f"{uzytkownik} otrzymał uprawnienia Administratora.")
