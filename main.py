@@ -26,6 +26,7 @@ wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehre
 wiadomosc_info = u"To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot"
 lista_komend = u"```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zgłos - zgłoś kogoś moderatorom za łamanie zasad \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź adres ip użytkownika \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś koronawirusem \n $zapytajboga - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
 radio_komendy = u"```Komendy dotyczące sterowania radiem: \n $radio - kontroluje radio```"
+admin_komendy = u"```Komendy dostępne dla administracji: \n $aresztuj - aresztuje użytkownika \n $przypomnij [przypomnienie] [czas] - przypomina wiadomość po ustalonym czasie \n $test_nicku - sprawdza nazwy użytkowników wszystkich użytkowników na serwerze i wysyła im wiadomość o zmianie```"
 wybor_klasy = u"Witamy na szkolnym serwerze ZSPM! Podaj nam klasę, do której uczęszczasz: \n1ATPDPI\n1ATGPC\n1BTGPC\n1CTI\n1DTI\n1DTM\n1ETGPC\n1FTI\n1FTM\n1GTI\n2ATPD\n2ATGPC\n2CTI\n2DTI\n2DTM\n3ATPD\n3ATGPC\n3BTGPC\n3CTI\n3DTI\n3DTM\n4ATPD\n4ATM\n4BTCPG\n4CTI\n4DTI"
 ostrzezenie_autoryzacji = u"Próbowałeś, ale nie. Incydent zgłoszono. \n Chyba że naprawdę jesteś nauczycielem. Wtedy napisz do kogoś z administracji."
 blad_klasy = u"Podaj klasę z listy!"
@@ -156,6 +157,7 @@ o8o        `8  o888o `Y8bod8P'
 
 tn = ["Tak.", "Nie."]
 god = ["Lepiej żebyś tego jeszcze nie wiedział", "To jest pewne, może?", "Nie mogę tego teraz przewidzieć", "Czemu miałbym ci mówić?"]
+
 # Opcje youtube_dl
 opcje_ytdl = {
     'format': 'bestaudio/best',
@@ -179,7 +181,6 @@ opcje_ffmpeg = {
 
 # Skrócenie zmiennych
 ytdl = youtube_dl.YoutubeDL(opcje_ytdl)
-
 
 class YTDLSource(discord.PCMVolumeTransformer):
     """Ukradzione z wbudowanych przykładów discord.py"""
@@ -219,6 +220,9 @@ class Info(commands.Cog):
         elif (komenda == "radio"):
             await ctx.send('Pomoc dotyczącą radia wysłałem ci na PM')
             await ctx.author.send(radio_komendy)
+        elif (komenda == "admin"):
+            await ctx.send('Pomoc dotyczącą administrowania wysłałem ci na PM')
+            await ctx.author.send(admin_komendy)
         else: # Aktualny Fallback, może byćz zmieniony później
             await ctx.send('Wysłałem ci listę komend na PM')
             await ctx.author.send(lista_komend)
@@ -227,7 +231,7 @@ class Muzyka(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(aliases=['dołącz'])
     async def join(self, ctx, *, channel: discord.VoiceChannel):
         """Dołącza do kanału głosowego"""
 
@@ -236,7 +240,7 @@ class Muzyka(commands.Cog):
 
         await channel.connect()
 
-    @commands.command()
+    @commands.command(aliases=['graj', 'odtwórz'])
     async def play(self, ctx, *, url):
         """Odtwarza utwór z URLa"""
 
@@ -247,7 +251,7 @@ class Muzyka(commands.Cog):
 
         await ctx.send('Teraz leci: {}'.format(player.title))
 
-    @commands.command()
+    @commands.command(aliases=['transmituj'])
     async def stream(self, ctx, *, url):
         """Odtwarza na żywo z URLa"""
 
@@ -258,7 +262,7 @@ class Muzyka(commands.Cog):
 
         await ctx.send('Teraz leci: {}'.format(player.title))
 
-    @commands.command()
+    @commands.command(aliases=['głośność'])
     async def volume(self, ctx, volume: int):
         """Zmienia głośność odtwarzania"""
 
@@ -268,7 +272,7 @@ class Muzyka(commands.Cog):
         ctx.voice_client.source.volume = volume / 100
         await ctx.send("Zmieniono głośność na {}%".format(volume))
 
-    @commands.command()
+    @commands.command(aliases=['zatrzymaj'])
     async def stop(self, ctx):
         """Zatrzymuje bota i rozłącza go"""
 
@@ -440,14 +444,35 @@ class Policjant(commands.Cog):
     @commands.command()
     @commands.has_any_role("Administracja")
     async def aresztuj(self, ctx, użytkownik):
-        await ctx.send(f"Aresztowano {użytkownik}")
+        try:
+            osoba = ctx.message.mentions[0]
+            kanał = bot.get_channel(672189523471630337)
+            try:
+                await osoba.move_to(kanał)
+            except:
+                await ctx.send(f"{użytkownik} nie jest podłączony(-a) do kanału głosowego.")
 
-    @commands.command()
-    @commands.has_any_role("Administracja")
-    async def tomek(self, ctx, użytkownik):
-        # Przenieś do Więzienia
-        # $play https://youtu.be/qclDfyIdMDk
-        await ctx.send(f"{użytkownik} został za-tomkowany. Oof.")
+            await ctx.send(f"Aresztowano {użytkownik}")
+        except:
+            await ctx.send(f"Nie udało się aresztować {użytkownik}")
+
+    # @commands.command()
+    # @commands.has_any_role("Administracja")
+    # async def tomek(self, ctx, użytkownik): # IN PROGRESS
+    #     try:
+    #         osoba = ctx.message.mentions[0]
+    #         kanał = bot.get_channel(671370182760857637) # 672189523471630337
+    #         serwer = bot.get_guild(id_serwera)
+    #         try:
+    #             await osoba.move_to(kanał)
+    #         except:
+    #             await ctx.send(f"{użytkownik} nie jest podłączony(-a) do kanału głosowego.")
+    #         await play("https://youtu.be/qclDfyIdMDk")
+    #         await ctx.send(f"{użytkownik} został za-tomkowany. Oof.")
+    #     except:
+    #         await ctx.send(f"Nie udało się za-tomkować {użytkownik}")
+
+    #     # $play https://youtu.be/qclDfyIdMDk
 
     @commands.command()
     @commands.has_any_role("Administracja")
