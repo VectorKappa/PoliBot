@@ -18,7 +18,7 @@ token = credentials.getToken()
 id_serwera = credentials.getServerId()
 lista_roli = credentials.getRole()
 blocklista = credentials.getBlocklist()
-
+nazwa_bota = credentials.getBotName()
 # Wariacje zmiennych
 wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehrer", "nauczycielka", "lehrerin", "profesor", "profesorka")
 
