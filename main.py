@@ -467,18 +467,15 @@ class Policjant(commands.Cog):
         try:
             for użytkownik in ctx.guild.members: 
                 if str(użytkownik.nick) == "None":
-                    if str(użytkownik) == "PoliBot Dev#6303": # WAŻNE BO INACZEJ BOT BĘDZIE PISAŁ SAM DO SIEBIE!
-                        print("Pomijanie siebie podczas sprawdzania...")
-                    else:
-                        nazwa = str(str(użytkownik)[:-5])
-                        rezultat = re.match(wzór, nazwa)
-                        if not rezultat:
-                            try:
-                                await użytkownik.send(zmien_nick)
-                                print(f"Użytkownik {użytkownik} został powiadomiony o zmianie nicku")
-                                niepoprawni_użytkownicy.append(str(użytkownik))
-                            except:
-                                print(f"Użytkownik {użytkownik} NIE został powiadomiony o zmianie nicku")
+                    nazwa = str(str(użytkownik)[:-5])
+                    rezultat = re.match(wzór, nazwa)
+                    if not rezultat:
+                        try:
+                            await użytkownik.send(zmien_nick)
+                            print(f"Użytkownik {użytkownik} został powiadomiony o zmianie nicku")
+                            niepoprawni_użytkownicy.append(str(użytkownik))
+                        except:
+                            print(f"Użytkownik {użytkownik} NIE został powiadomiony o zmianie nicku")
                 else:    
                     rezultat = re.match(wzór, str(użytkownik.nick))
                     if not rezultat:
