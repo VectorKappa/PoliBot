@@ -510,12 +510,43 @@ class Policjant(commands.Cog):
                             niepoprawni_użytkownicy.append(str(użytkownik))
                         except:
                             print(f"Użytkownik {użytkownik} NIE został powiadomiony o zmianie nicku")
-            niepoprawni_użytkownicy = str(', '.join(niepoprawni_użytkownicy))
             await ctx.send("Polecenie wykonano pomyślnie!")
-            await ctx.send(f"```Powiadomieni zostali:\n {niepoprawni_użytkownicy}```")
+            await ctx.send(f"Powiadomionych zostało {len(niepoprawni_użytkownicy)} użytkowników")
         except:
             await ctx.send("Wystąpił Krytyczny Błąd!")
 
+    @commands.command(aliases=['wyrzuć_niewłaściwe_nicki'])
+    @commands.has_any_role("Administracja")
+    async def kick_invalid_nicknames(self, ctx):
+        wzór = re.compile(r"[A-ZĄ-Ż]{1}[a-zą-ż]*\s[A-ZĄ-Ż]{1}[a-zą-ż]*(\-)?(?(1)[A-ZĄ-Ż]{1}[a-zą-ż]*)") # Wielka Litera, Małe Litery, Spacja, Wielka Litera, Małe litery, opcjonalnie Myślnik, Wielka Litera, Małe litery
+        niepoprawni_użytkownicy = []
+        sprawdzanie = "Sprawdzanie zgodności ze wzorem..."
+        await ctx.send(sprawdzanie)
+        try:
+            for użytkownik in ctx.guild.members: 
+                if str(użytkownik.nick) == "None":
+                    nazwa = str(str(użytkownik)[:-5])
+                    rezultat = re.match(wzór, nazwa)
+                    if not rezultat:
+                        try:
+                            await bot.kick(użytkownik)
+                            print(f"Użytkownik {użytkownik} został(-a) wyrzucony(-a) z serwera")
+                            niepoprawni_użytkownicy.append(str(użytkownik))
+                        except:
+                            print(f"Użytkownik {użytkownik} NIE został(-a) wyrzucony(-a) z serwera")
+                else:    
+                    rezultat = re.match(wzór, str(użytkownik.nick))
+                    if not rezultat:
+                        try:
+                            await bot.kick(użytkownik)
+                            print(f"Użytkownik {użytkownik} został(-a) wyrzucony(-a) z serwera")
+                            niepoprawni_użytkownicy.append(str(użytkownik))
+                        except:
+                            print(f"Użytkownik {użytkownik} NIE został(-a) wyrzucony(-a) z serwera")
+            await ctx.send("Polecenie wykonano pomyślnie!")
+            await ctx.send(f"Wyrzuconych zostało {len(niepoprawni_użytkownicy)} użytkowników")
+        except:
+            await ctx.send("Wystąpił Krytyczny Błąd!")
 class Zabawa(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
