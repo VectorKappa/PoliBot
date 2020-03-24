@@ -487,10 +487,11 @@ class Policjant(commands.Cog):
         wzór = re.compile(r"[A-ZĄ-Ż]{1}[a-zą-ż]*\s[A-ZĄ-Ż]{1}[a-zą-ż]*(\-)?(?(1)[A-ZĄ-Ż]{1}[a-zą-ż]*)") # Wielka Litera, Małe Litery, Spacja, Wielka Litera, Małe litery, opcjonalnie Myślnik, Wielka Litera, Małe litery
         niepoprawni_użytkownicy = []
         sprawdzanie = "Sprawdzanie zgodności ze wzorem..."
-        zmien_nick = "Zmień swój nick na swoje Imię i Nazwisko (Zaczynając od wielkich liter!)"
+        zmien_nick = "Zmień swój nick na **swoje** Imię i Nazwisko(Zaczynając od wielkich liter!)\nBrak zmiany oznacza wyrzucenie z serwera w związku z pogwałceniem 6 punktu regulaminu. Masz czas do godziny 16:00 CET."
         await ctx.send(sprawdzanie)
         try:
             for użytkownik in ctx.guild.members: 
+                await asyncio.sleep(0.5)
                 if str(użytkownik.nick) == "None":
                     nazwa = str(str(użytkownik)[:-5])
                     rezultat = re.match(wzór, nazwa)
@@ -524,6 +525,7 @@ class Policjant(commands.Cog):
         await ctx.send(sprawdzanie)
         try:
             for użytkownik in ctx.guild.members: 
+                await asyncio.sleep(0.5)
                 if str(użytkownik.nick) == "None":
                     nazwa = str(str(użytkownik)[:-5])
                     rezultat = re.match(wzór, nazwa)
@@ -547,6 +549,11 @@ class Policjant(commands.Cog):
             await ctx.send(f"Wyrzuconych zostało {len(niepoprawni_użytkownicy)} użytkowników")
         except:
             await ctx.send("Wystąpił Krytyczny Błąd!")
+    
+    @commands.command()
+    async def dm(self, ctx, wiadomość, *, cel):
+        serwer = bot.get_guild(id_serwera)
+        await serwer.get_member(int(cel.strip("<@!>"))).send(wiadomość)
 class Zabawa(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
