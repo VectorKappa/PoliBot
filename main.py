@@ -9,6 +9,8 @@ from discord.ext import tasks, commands
 import datetime
 import time
 import random
+import gspread
+import subprocess
 
 # Wyciszenie błędów youtube_dl
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -551,9 +553,22 @@ class Policjant(commands.Cog):
             await ctx.send("Wystąpił Krytyczny Błąd!")
     
     @commands.command()
+    @commands.has_any_role("Administracja")
     async def dm(self, ctx, wiadomość, *, cel):
         serwer = bot.get_guild(id_serwera)
         await serwer.get_member(int(cel.strip("<@!>"))).send(wiadomość)
+        await ctx.send(f"Wysłano wiadomość do {cel}")
+        print(f"Wysłano wiadomość do {cel}")
+
+    @commands.command()
+    @commands.has_any_role("Administracja")
+    async def warn(self, ctx, cel, powód=""):
+        ilość_ostrzeżeń=1
+        serwer = bot.get_guild(id_serwera)
+        await serwer.get_member(int(cel.strip("<@!>"))).send(f"Otrzymujesz ostrzeżenie za: {powód}. Ilość twoich ostrzeżeń to: **{ilość_ostrzeżeń}**")
+        await ctx.send(f"Ostrzeżono {cel}")
+        print(f"Ostrzeżono {cel}")
+        
 class Zabawa(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -648,8 +663,18 @@ class Zabawa(commands.Cog):
         await ctx.send(f"Pong! {int(bot.latency*1000)}ms")
 
     # TO DO
-    # $przekleństwa - licznik przeklęśtw?
     # $pierwsze-slowa - pierwsza wiadomość gracza na serwerze
+
+
+class Aktualizator(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    @commands.Cog.listener()
+    async def on_message(self, ctx):
+        if str(ctx.author)=="GitHub#0000":
+            if ctx.channel.id==694079178005282826:
+                await subprocess.Popen(["sh", "./udpater.sh"])
 
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
                    description=wiadomosc_info, help_command=None)
@@ -666,6 +691,7 @@ bot.add_cog(Przydzielaczka(bot))
 bot.add_cog(Logger(bot))
 bot.add_cog(Policjant(bot))
 bot.add_cog(Zabawa(bot))
+bot.add_cog(Aktualizator(bot))
 
 bot.run(token)
 
