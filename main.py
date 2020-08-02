@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import asyncio
 import discord
 import youtube_dl
@@ -9,7 +10,6 @@ from discord.ext import tasks, commands
 import datetime
 import time
 import random
-import gspread
 import subprocess
 
 # Wyciszenie błędów youtube_dl
@@ -687,7 +687,7 @@ async def on_ready():
 # Przełączanie funkcjonalności (Wykomentować niechciane linijki)
 bot.add_cog(Info(bot))
 bot.add_cog(Muzyka(bot))
-bot.add_cog(Przydzielaczka(bot))
+#bot.add_cog(Przydzielaczka(bot))
 bot.add_cog(Logger(bot))
 bot.add_cog(Policjant(bot))
 bot.add_cog(Zabawa(bot))
