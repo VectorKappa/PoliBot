@@ -19,18 +19,18 @@ youtube_dl.utils.bug_reports_message = lambda: ''
 token = credentials.getToken()
 id_serwera = credentials.getServerId()
 lista_roli = credentials.getRole()
-blocklista = credentials.getBlocklist()
+
 
 # Wariacje zmiennych
-wariacje_nauczycieli = ("nauczyciel", "teacher", "maestro", "professeur", "lehrer", "nauczycielka", "lehrerin", "profesor", "profesorka")
+wariacje_nauczycieli = ("nauczyciel", "teacher", "nauczycielka")
 
 # Komunikaty
 wiadomosc_info = u"To jest bot przeznaczony dla Zespołu Szkół Poligraficzno-Mechanicznych im. Armii Krajowej w Katowicach. \n Aby uzyskać listę komend, wpisz $komendy \n Więcej info: https://github.com/VectorKappa/PoliBot"
-lista_komend = u"```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $pierwsze-slowa - pierwsza wiadomość gracza na serwerze \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $spanko - mówi ci czy możesz spać czy nie \n $zgłos - zgłoś kogoś moderatorom za łamanie zasad \n $nie - NIE \n $tak - TAK \n $ip - sprawdź lokalizację i isp podanego adresu lub domeny \n $dox - znajdź adres ip użytkownika \n $tn - tak lub nie \n $kostka - rzuć kostką \n $zainfekuj - zainfekuj kogoś koronawirusem \n $zapytajboga - zapytaj \n $zabij - zabij kogoś \n $op - daj komuś opa \n $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.```"
+lista_komend = u"```Lista komend bota: \n $komendy - wysyła tę listę komend \n $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio \n $ping - sprawdź ping bota \n $czas - wyświetla aktualny czas \n $nie - NIE \n $tak - TAK \n $kostka - rzuć kostką```"
 radio_komendy = u"```Komendy dotyczące sterowania radiem: \n $radio - kontroluje radio```"
 admin_komendy = u"```Komendy dostępne dla administracji: \n $aresztuj - aresztuje użytkownika \n $przypomnij [przypomnienie] [czas] - przypomina wiadomość po ustalonym czasie \n $test_nicku - sprawdza nazwy użytkowników wszystkich użytkowników na serwerze i wysyła im wiadomość o zmianie```"
-wybor_klasy = u"Witamy na szkolnym serwerze ZSPM! Podaj nam klasę, do której uczęszczasz: \n1ATPDPI\n1ATGPC\n1BTGPC\n1CTI\n1DTI\n1DTM\n1ETGPC\n1FTI\n1FTM\n1GTI\n2ATPD\n2ATGPC\n2CTI\n2DTI\n2DTM\n3ATPD\n3ATGPC\n3BTGPC\n3CTI\n3DTI\n3DTM\n4ATPD\n4ATM\n4BTCPG\n4CTI\n4DTI"
-ostrzezenie_autoryzacji = u"Próbowałeś, ale nie. Incydent zgłoszono. \n Chyba że naprawdę jesteś nauczycielem. Wtedy napisz do kogoś z administracji."
+wybor_klasy = u"Witamy na szkolnym serwerze ZSPM! Podaj nam klasę, do której uczęszczasz: \n1ATPD\n1ATGPC\n1ATM\n1BTGPC\n1CTI"
+ostrzezenie_autoryzacji = u"Próbowałeś, ale nie. Incydent zgłoszono. \n Chyba że naprawdę jesteś nauczycielem. Wtedy napisz do kogoś z administracji :)."
 blad_klasy = u"Podaj klasę z listy!"
 tak = (r"""```
         ,----,                     
@@ -157,9 +157,6 @@ o8o        `8  o888o `Y8bod8P'
 |/__\|/__\|/__\|
         ```""",)
 
-tn = ["Tak.", "Nie."]
-god = ["Lepiej żebyś tego jeszcze nie wiedział", "To jest pewne, może?", "Nie mogę tego teraz przewidzieć", "Czemu miałbym ci mówić?"]
-
 # Opcje youtube_dl
 opcje_ytdl = {
     'format': 'bestaudio/best',
@@ -172,7 +169,6 @@ opcje_ytdl = {
     'quiet': True,
     'no_warnings': True,
     'default_search': 'auto',
-    # bind to ipv4 since ipv6 addresses cause issues sometimes
     'source_address': '0.0.0.0'
 }
 
@@ -215,7 +211,7 @@ class Info(commands.Cog):
         await ctx.send(wiadomosc_info)
 
     @commands.command()
-    async def komendy(self, ctx, komenda="wszystkie"): # Należy wykończyć dokumentację, gdy stworzymy wszytkie komendy
+    async def komendy(self, ctx, komenda="wszystkie"):
         if (komenda == "wszystkie"):
             await ctx.send('Wysłałem ci listę komend na PM')
             await ctx.author.send(lista_komend)
@@ -321,123 +317,36 @@ class Przydzielaczka(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, ctx):
         if ctx.guild is None:
-            if ctx.author.id not in blocklista:
-                serwer = bot.get_guild(id_serwera)
-                if str(ctx.content).lower() in wariacje_nauczycieli:
-                    await ctx.author.send(ostrzezenie_autoryzacji)
-                    print(f"{ctx.author} usiłował się zalogować jako nauczyciel")
-                elif ctx.content.upper() == "1ATPDPI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATPDPI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1ATPDPI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1ATPDPI dla {ctx.author}")
-                elif ctx.content.upper() == "1ATGPC":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATGPC"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
-                elif ctx.content.upper() == "1BTGPC":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1BTGPC"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
-                elif ctx.content.upper() == "1CTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1CTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1CTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1CTI dla {ctx.author}")
-                elif ctx.content.upper() == "1DTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1DTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1DTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1DTI dla {ctx.author}")
-                elif ctx.content.upper() == "1DTM":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1DTM"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1DTM dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1DTM dla {ctx.author}")
-                elif ctx.content.upper() == "1ETGPC":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ETGPC"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1ETGPC dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1ETGPC dla {ctx.author}")
-                elif ctx.content.upper() == "1FTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1FTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1FTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1FTI dla {ctx.author}")
-                elif ctx.content.upper() == "1FTM":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1FTM"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1FTM dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1FTM dla {ctx.author}")
-                elif ctx.content.upper() == "1GTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1GTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 1GTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 1GTI dla {ctx.author}")
-                elif ctx.content.upper() == "2ATPD":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2ATPD"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 2ATPD dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 2ATPD dla {ctx.author}")
-                elif ctx.content.upper() == "2ATGPC":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2ATGPC"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 2ATGPC dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 2ATGPC dla {ctx.author}")
-                elif ctx.content.upper() == "2CTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2CTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 2CTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 2CTI dla {ctx.author}")
-                elif ctx.content.upper() == "2DTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2DTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 2DTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 2DTI dla {ctx.author}")
-                elif ctx.content.upper() == "2DTM":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["2DTM"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 2DTM dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 2DTM dla {ctx.author}")
-                elif ctx.content.upper() == "3ATPD":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3ATPD"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 3ATPD dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 3ATPD dla {ctx.author}")
-                elif ctx.content.upper() == "3ATGPC":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3ATGPC"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 3ATGPC dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 3ATGPC dla {ctx.author}")
-                elif ctx.content.upper() == "3BTGPC":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3BTGPC"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 3BTGPC dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 3BTGPC dla {ctx.author}")
-                elif ctx.content.upper() == "3CTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3CTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 3CTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 3CTI dla {ctx.author}")
-                elif ctx.content.upper() == "3DTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3DTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 3DTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 3DTI dla {ctx.author}")
-                elif ctx.content.upper() == "3DTM":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["3DTM"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 3DTM dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 3DTM dla {ctx.author}")
-                elif ctx.content.upper() == "4ATPD":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4ATPD"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 4ATPD dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 4ATPD dla {ctx.author}")
-                elif ctx.content.upper() == "4ATM":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4ATM"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 4ATM dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 4ATM dla {ctx.author}")
-                elif ctx.content.upper() == "4BTCPG":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4BTCPG"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 4BTCPG dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 4BTCPG dla {ctx.author}")
-                elif ctx.content.upper() == "4CTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4CTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 4CTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 4CTI dla {ctx.author}")
-                elif ctx.content.upper() == "4DTI":
-                    await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["4DTI"]), serwer.get_role(689119435151114345),))
-                    print(f"Przydzielono rolę 4DTI dla {ctx.author}")
-                    await ctx.author.send(f"Przydzielono rolę 4DTI dla {ctx.author}")
-                else:
-                    try:
-                        await ctx.author.send(blad_klasy)   # Przepraszam, ale to jedyny sposób żeby nie wywalało błędu w konsoli
-                    except:                                 # Znaczy, jakimś cudem działa pomimo błędu
-                        pass                                # Python jest dziwny.
+            serwer = bot.get_guild(id_serwera)
+            if str(ctx.content).lower() in wariacje_nauczycieli:
+                await ctx.author.send(ostrzezenie_autoryzacji)
+                print(f"{ctx.author} usiłował się zalogować jako nauczyciel")
+            elif ctx.content.upper() == "1ATPD":
+                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATPD"]), serwer.get_role(689119435151114345),))
+                print(f"Przydzielono rolę 1ATPD dla {ctx.author}")
+                await ctx.author.send(f"Przydzielono rolę 1ATPD dla {ctx.author}")
+            elif ctx.content.upper() == "1ATGPC":
+                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATGPC"]), serwer.get_role(689119435151114345),))
+                print(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
+                await ctx.author.send(f"Przydzielono rolę 1ATGPC dla {ctx.author}")
+            elif ctx.content.upper() == "1ATM":
+                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1ATM"]), serwer.get_role(689119435151114345),))
+                print(f"Przydzielono rolę 1ATM dla {ctx.author}")
+                await ctx.author.send(f"Przydzielono rolę 1ATM dla {ctx.author}")
+            elif ctx.content.upper() == "1BTGPC":
+                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1BTGPC"]), serwer.get_role(689119435151114345),))
+                print(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
+                await ctx.author.send(f"Przydzielono rolę 1BTGPC dla {ctx.author}")
+            elif ctx.content.upper() == "1CTI":
+                await serwer.get_member(ctx.author.id).edit(roles=(serwer.get_role(lista_roli["1CTI"]), serwer.get_role(689119435151114345),))
+                print(f"Przydzielono rolę 1CTI dla {ctx.author}")
+                await ctx.author.send(f"Przydzielono rolę 1CTI dla {ctx.author}")
             else:
-                pass
-            
+                try:                                    # TIL That Python doesn't have switch statement
+                    await ctx.author.send(blad_klasy)   # Przepraszam, ale to jedyny sposób żeby nie wywalało błędu w konsoli
+                except:                                 # Znaczy, jakimś cudem działa pomimo błędu
+                    pass                                # Python jest dziwny.
+
 
 class Policjant(commands.Cog):
     def __init__(self, bot):
@@ -458,24 +367,6 @@ class Policjant(commands.Cog):
         except:
             await ctx.send(f"Nie udało się aresztować {użytkownik}")
 
-    # @commands.command()
-    # @commands.has_any_role("Administracja")
-    # async def tomek(self, ctx, użytkownik): # IN PROGRESS
-    #     try:
-    #         osoba = ctx.message.mentions[0]
-    #         kanał = bot.get_channel(671370182760857637) # 672189523471630337
-    #         serwer = bot.get_guild(id_serwera)
-    #         try:
-    #             await osoba.move_to(kanał)
-    #         except:
-    #             await ctx.send(f"{użytkownik} nie jest podłączony(-a) do kanału głosowego.")
-    #         await play("https://youtu.be/qclDfyIdMDk")
-    #         await ctx.send(f"{użytkownik} został za-tomkowany. Oof.")
-    #     except:
-    #         await ctx.send(f"Nie udało się za-tomkować {użytkownik}")
-
-    #     # $play https://youtu.be/qclDfyIdMDk
-
     @commands.command()
     @commands.has_any_role("Administracja")
     async def przypomnij(self, ctx, czas, *, wiadomość):
@@ -489,7 +380,7 @@ class Policjant(commands.Cog):
         wzór = re.compile(r"[A-ZĄ-Ż]{1}[a-zą-ż]*\s[A-ZĄ-Ż]{1}[a-zą-ż]*(\-)?(?(1)[A-ZĄ-Ż]{1}[a-zą-ż]*)") # Wielka Litera, Małe Litery, Spacja, Wielka Litera, Małe litery, opcjonalnie Myślnik, Wielka Litera, Małe litery
         niepoprawni_użytkownicy = []
         sprawdzanie = "Sprawdzanie zgodności ze wzorem..."
-        zmien_nick = "Zmień swój nick na **swoje** Imię i Nazwisko(Zaczynając od wielkich liter!)\nBrak zmiany oznacza wyrzucenie z serwera w związku z pogwałceniem 6 punktu regulaminu. Masz czas do godziny 16:00 CET."
+        zmien_nick = "Zmień swój nick na **swoje** Imię i Nazwisko(Zaczynając od wielkich liter!)\nBrak zmiany oznacza wyrzucenie z serwera w związku z pogwałceniem 6 punktu regulaminu. Masz 12 godzin na reakcję."
         await ctx.send(sprawdzanie)
         try:
             for użytkownik in ctx.guild.members: 
@@ -578,38 +469,12 @@ class Zabawa(commands.Cog):
         await ctx.send(f"Aktualny czas to: {time.time()}s (od 1/1/1970)")
 
     @commands.command()
-    async def spanko(self, ctx):
-        if datetime.datetime.now().hour >= 23 or datetime.datetime.now().hour <= 6:
-            await ctx.send("Spać! A nie nocki jakieś :crescent_moon:")
-        else:
-            await ctx.send("Trza było spać w nocy :sunny:")
-
-    @commands.command()
-    async def zgłoś(self, ctx, uzytkownik):
-        await ctx.send(f"{ctx.author.mention} zgłosił {uzytkownik} administracji. Miej się na baczności!")
-
-    @commands.command()
-    async def zainfekuj(self, ctx, uzytkownik):
-        await ctx.send(f"{ctx.author.mention} zainfekował {uzytkownik} koronawirusem")
-
-    @commands.command()
     async def tak(self, ctx):
         await ctx.send(tak[random.randint(0, len(tak)-1)])
 
     @commands.command()
     async def nie(self, ctx):
         await ctx.send(nie[random.randint(0, len(nie)-1)])
-    
-    @commands.command()
-    async def tn(self, ctx):
-        await ctx.send(tn[random.randint(0, 1)])
-
-    @commands.command()
-    async def dox(self, ctx, uzytkownik="▓"):
-        if not uzytkownik == "▓":
-            await ctx.send(f"Adres IP {uzytkownik} to {random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}.{random.randint(0,255)}")
-        else:
-            await ctx.send("Błond, Dżejms Błond")
     
     @commands.command()
     async def kostka(self, ctx, params = 'd20', amount = 1,):
@@ -619,52 +484,10 @@ class Zabawa(commands.Cog):
             sides = int(res.group(1))
             modifier = int(res.group(3)) if str(res.group(3)).isnumeric() else 0
             await ctx.send(f"Losuje d{sides}+{modifier}: **{str(random.randint(1,sides)+modifier)}**")
-    
-    # @commands.command()
-    # async def kostka(self, ctx, params):
-    #     regExp = re.compile("d([\d]*)(\+)?(?(2)([\d]*))")
-    #     res = regExp.match(params)
-    #     sides = int(res.group(1))
-    #     modifier = int(res.group(3)) if res.group(3).isnumeric() else 0
-    #     await ctx.send(f"Losuje {sides}d+{modifier}: {str(random.randint(1,sides)+modifier)}")
-    
-    @commands.command()
-    async def op(self, ctx, uzytkownik):
-        await ctx.send(f"{uzytkownik} otrzymał uprawnienia Administratora.")
-
-    @commands.command()
-    async def pobłogosław(self, ctx, uzytkownik):
-        await ctx.send(f"{ctx.author.mention} pobłogosławił {uzytkownik}. Ale dobra osoba.") 
-
-    @commands.command()
-    async def zapytajboga(self, ctx):
-        await ctx.send(god[random.randint(0, len(god)-1)]) 
-    
-    @commands.command()
-    async def zabij(self, ctx, uzytkownik):
-        await ctx.send(f"{ctx.author.mention} zabił {uzytkownik}") 
-
-    @commands.command()
-    async def ip(self, ctx, ip):
-        try:
-            url = 'https://ipinfo.io/' + ip + '/json'
-            odpowiedź = urlopen(url)
-            dane = load(odpowiedź)
-            org=dane['org']
-            city = dane['city']
-            country=dane['country']
-            region=dane['region']
-            await ctx.send('Lokalizacja: {1}, {2}, {3} ISP: {0}'.format(org,city,region,country))
-        except:
-            await ctx.send("Adres nie istnieje lub jest niepoprawny")
 
     @commands.command()
     async def ping(self, ctx):
         await ctx.send(f"Pong! {int(bot.latency*1000)}ms")
-
-    # TO DO
-    # $pierwsze-slowa - pierwsza wiadomość gracza na serwerze
-
 
 class Aktualizator(commands.Cog):
     def __init__(self, bot):
@@ -676,8 +499,7 @@ class Aktualizator(commands.Cog):
             if ctx.channel.id==694079178005282826:
                 await subprocess.Popen(["sh", "./udpater.sh"])
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"),
-                   description=wiadomosc_info, help_command=None)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"), description=wiadomosc_info, help_command=None)
 
 @bot.event
 async def on_ready():
@@ -687,30 +509,10 @@ async def on_ready():
 # Przełączanie funkcjonalności (Wykomentować niechciane linijki)
 bot.add_cog(Info(bot))
 bot.add_cog(Muzyka(bot))
-#bot.add_cog(Przydzielaczka(bot))
+bot.add_cog(Przydzielaczka(bot))
 bot.add_cog(Logger(bot))
 bot.add_cog(Policjant(bot))
 bot.add_cog(Zabawa(bot))
 bot.add_cog(Aktualizator(bot))
 
 bot.run(token)
-
-# Spis wszystkich komend na serwerze.
-# $komendy - wysyła tę listę komend
-# $radio - kontroluje radio, aby uzyskać pomoc dotyczącą subkomend użyj $komendy radio
-# $pierwsze-slowa - pierwsza wiadomość gracza na serwerze
-# $ping - sprawdź ping bota
-# $czas - wyświetla aktualny czas
-# $spanko - mówi ci czy możesz spać czy nie
-# $zgłos - zgłoś kogoś moderatorom za łamanie zasad
-# $nie - NIE
-# $tak - TAK
-# $ip - sprawdź lokalizację i isp podanego adresu lub domeny
-# $dox - znajdź kogoś adres ip
-# $tn - tak lub nie
-# $kostka - rzuć kostką
-# $zainfekuj - zainfekuj kogoś Koronawirusem
-# $zapytajboga - zapytaj
-# $zabij - zabij kogoś
-# $op - daj komuś opa
-# $pobłogosław - pobłogosław kogoś. Jesteś dobrym człowiekiem.

@@ -3,7 +3,4 @@ def getToken():
 def getServerId():
     return IDTwojegoSerwera
 def getRole():
-    return {"lista": ról }
-def getBlocklist():
-    lista = [blokowane_ID,]
-    return lista
+    return {"Nazwa Klasy": discord_role_id }
