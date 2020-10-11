@@ -451,6 +451,8 @@ class Policjant(commands.Cog):
         await ctx.send(f"Wysłano wiadomość do {cel}")
         print(f"Wysłano wiadomość do {cel}")
 
+    # TODO: SQLite sync
+
     @commands.command()
     @commands.has_any_role("Administracja")
     async def warn(self, ctx, cel, powód=""):
@@ -496,16 +498,6 @@ class Zabawa(commands.Cog):
     async def ping(self, ctx):
         await ctx.send(f"Pong! {int(bot.latency*1000)}ms")
 
-class Aktualizator(commands.Cog):
-    def __init__(self, bot):
-        self.bot = bot
-
-    @commands.Cog.listener()
-    async def on_message(self, ctx):
-        if str(ctx.author)=="GitHub#0000":
-            if ctx.channel.id==694079178005282826:
-                await subprocess.Popen(["sh", "./udpater.sh"])
-
 bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"), description=wiadomosc_info, help_command=None)
 
 @bot.event
@@ -520,6 +512,5 @@ bot.add_cog(Przydzielaczka(bot))
 bot.add_cog(Logger(bot))
 bot.add_cog(Policjant(bot))
 bot.add_cog(Zabawa(bot))
-bot.add_cog(Aktualizator(bot))
 
 bot.run(token)
