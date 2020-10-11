@@ -479,11 +479,18 @@ class Zabawa(commands.Cog):
     @commands.command()
     async def kostka(self, ctx, params = 'd20', amount = 1,):
         for i in range(amount):
-            regExp = re.compile(r"d([\d]*)(\+)?(?(2)([\d]*))")
+            regExp = re.compile(r"d([\d]*)(\+|\-)?(?(2)([\d]*))")
             res = regExp.match(params)
             sides = int(res.group(1))
+            modOp = res.group(2)
             modifier = int(res.group(3)) if str(res.group(3)).isnumeric() else 0
-            await ctx.send(f"Losuje d{sides}+{modifier}: **{str(random.randint(1,sides)+modifier)}**")
+            if modOp == "+":
+                result = str(random.randint(1,sides)+modifier)
+            elif modOp == "-":
+                result = str(random.randint(1,sides)-modifier)
+            else:
+                result = str(random.randint(1,sides))
+            await ctx.send(f"Losuje d{sides}+{modifier}: **{result}**")
 
     @commands.command()
     async def ping(self, ctx):
