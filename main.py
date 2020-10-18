@@ -20,6 +20,8 @@ token = credentials.getToken()
 id_serwera = credentials.getServerId()
 lista_roli = credentials.getRole()
 
+intents = discord.Intents.default()
+intents.members = True 
 
 # Wariacje zmiennych
 wariacje_nauczycieli = ("nauczyciel", "teacher", "nauczycielka")
@@ -301,6 +303,11 @@ class Logger(commands.Cog):
         else:
             print(f"[{datetime.datetime.now()}]  {ctx.author} napisał {ctx.content} na {ctx.channel}")
 
+    @commands.Cog.listener()
+    async def on_member_update(self, pre, post):
+        if pre.display_name != post.display_name:
+            print(f"[{datetime.datetime.now()}] {pre.display_name} zmienił swój nick na {post.display_name}")
+
 class Przydzielaczka(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -498,7 +505,9 @@ class Zabawa(commands.Cog):
     async def ping(self, ctx):
         await ctx.send(f"Pong! {int(bot.latency*1000)}ms")
 
-bot = commands.Bot(command_prefix=commands.when_mentioned_or("$"), description=wiadomosc_info, help_command=None)
+
+bot = commands.Bot(command_prefix=commands.when_mentioned_or(
+    "$"), description=wiadomosc_info, help_command=None, intents=intents)
 
 @bot.event
 async def on_ready():
