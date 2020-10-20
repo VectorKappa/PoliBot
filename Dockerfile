@@ -3,4 +3,4 @@ WORKDIR /PoliBot
 COPY . .
 RUN pip install youtube-dl asyncio discord.py urllib3
 RUN git pull
-CMD [ "python", "main.py" ]
+CMD [ "python", "-u",  "main.py" ]
